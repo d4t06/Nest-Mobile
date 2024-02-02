@@ -14,8 +14,14 @@ export class ProductsService {
   ) {}
 
   async findAll(category_id: number, page: number) {
-    const [products, count] = await this.productRepository.findAndCount();
-
+    const [products, count] = await this.productRepository.findAndCount({
+      relations: {
+        category: true,
+      },
+      where: {
+        category_id: 1,
+      },
+    });
     return { products, count, page, category_id };
   }
 
@@ -27,7 +33,8 @@ export class ProductsService {
     console.log('check data', createProductDto);
 
     const item = new Product(createProductDto);
-    await this.entityManager.save(item);
+    const newProduct = await this.entityManager.save(item);
+    return newProduct;
   }
 
   update(body: UpdateProductDto) {

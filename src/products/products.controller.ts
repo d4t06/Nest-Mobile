@@ -18,8 +18,8 @@ export class ProductsController {
   // GET /products
   @Get()
   findAll(
-    @Query('category_id', ParseIntPipe) category_id: number,
     @Query('page', ParseIntPipe) page: number,
+    @Query('category_id', ParseIntPipe) category_id: number,
   ) {
     return this.productService.findAll(category_id, page);
   }

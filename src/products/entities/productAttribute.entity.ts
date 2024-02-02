@@ -1,30 +1,44 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { CategoryAttribute } from '@/categories/entities/categoryAttribute.entity';
 
-@Entity()
+@Entity({ name: 'Product_Attributes' })
+@Unique('check_unique',['category_attribute_id', 'product_id'])
 export class ProductAttribute {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryColumn()
-  @ManyToOne(() => Product, (product) => product.id, {
-    cascade: true,
-  })
+  // ***
+  @Column()
   product_id: number;
 
-  @PrimaryColumn()
-  @ManyToOne(() => CategoryAttribute, (product) => product.id, {
-    cascade: true,
-  })
+  @ManyToOne(() => Product, (p) => p.id)
+  @JoinColumn({ name: 'product_id' })
+  product: Product;
+  // ***
+
+  // ***
+  @Column()
   category_attribute_id: number;
 
+  @ManyToOne(() => CategoryAttribute, (cA) => cA.id)
+  @JoinColumn({ name: 'category_attribute_id' })
+  category_attribute: string;
+  // ***
+  
   @Column({ type: 'text' })
   value: string;
+  
+
+
+  constructor(item: Partial<ProductAttribute>) {
+    Object.assign(this, item);
+  }
 }

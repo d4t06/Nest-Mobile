@@ -4,8 +4,9 @@ POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-   "name" : "iPhone 14 Pro",
-   "name_ascii": "iphone_14_pro"
+   "product_name" : "iPhone 7 Plus",
+   "product_ascii": "iphone_7_plus",
+   "category_id": "1"
 }
 
 
@@ -14,10 +15,23 @@ POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-   "category_name" : "Mobile Phone",
-   "category_ascii": "mobile-phone"
+   "category_name" : "Mobile",
+   "category_ascii": "mobile"
 }
 
 
 ###
-GET http://localhost:3000/api/products?page=1&cagegory_id=1
+POST http://localhost:3000/api/categories/attributes
+Content-Type: application/json
+
+{
+   "category_id": "1",
+  "attribute_name": "GPU",
+  "attribute_ascii": "gpu"
+}
+
+###
+GET http://localhost:3000/api/products?page=1&category_id=1
+
+###
+GET  http://localhost:3000/api/categories/1

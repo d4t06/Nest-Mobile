@@ -1,25 +1,26 @@
-// import { Product } from 'src/products/entities/product.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-// import { CategoryAttribute } from './categoryAttribute.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { CategoryAttribute } from './categoryAttribute.entity';
 
-@Entity()
+@Entity({ name: 'Categories' })
 export class Category {
   @PrimaryGeneratedColumn()
-  //   @OneToMany(() => Product, (product) => product.id)
-  //   @OneToMany(
-  //     () => CategoryAttribute,
-  //     (categoryAttribute) => categoryAttribute.category_id,
-  //   )
   id: number;
 
   @Column()
   category_name: string;
 
-  @Column({
-    unique: true,
-  })
-  @Column({ default: false })
-  represent: boolean;
+  @Column({ unique: true })
+  category_ascii: string;
+
+  @OneToMany(
+    () => CategoryAttribute,
+    // must reference column name in other table
+    (categoryAttribute) => categoryAttribute.category,
+    // not
+    // (categoryAttribute) => categoryAttribute.category_id,
+    { cascade: true },
+  )
+  attributes: CategoryAttribute[];
 
   constructor(item: Partial<Category>) {
     Object.assign(this, item);

@@ -1,26 +1,38 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Category } from '@/categories/entities/category.entity';
 
-@Entity()
+@Entity({ name: 'Category_Attributes' })
+@Unique('check_unique', ['category_id', 'attribute_ascii'])
 export class CategoryAttribute {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryColumn()
-  @ManyToOne(() => Category, (category) => category.id, {
-    cascade: true,
-  })
+  // ***
+  @Column()
   category_id: number;
 
-  @PrimaryColumn()
+  @ManyToOne(() => Category, (category) => category.attributes)
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
+  // ***
+
+  @Column()
   attribute_ascii: string;
 
   @Column()
   attribute_name: string;
+
+  @Column({ default: false })
+  represent: boolean;
+
+  constructor(item: Partial<CategoryAttribute>) {
+    Object.assign(this, item);
+  }
 }

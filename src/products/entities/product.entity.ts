@@ -1,7 +1,15 @@
 import { Category } from 'src/categories/entities/category.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ProductAttribute } from './productAttribute.entity';
 
-@Entity()
+@Entity({ name: 'Products' })
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,10 +23,24 @@ export class Product {
   @Column({ nullable: true })
   image_url: string;
 
-  @ManyToOne(() => Category, (category) => category.id, {
-    cascade: true,
-  })
+  // ***
+  @Column()
   category_id: number;
+
+  @ManyToOne(() => Category, (c) => c.id)
+  // this is the fk column name
+  // must matches column name above
+  @JoinColumn({ name: 'category_id' })
+  // this is the alias column name
+  category: Category;
+  // ***
+
+  @OneToMany(
+    () => ProductAttribute,
+    (productAttribute) => productAttribute.product,
+    { cascade: true },
+  )
+  attributes: ProductAttribute[];
 
   constructor(product: Partial<Product>) {
     Object.assign(this, product);
