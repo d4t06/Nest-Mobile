@@ -5,7 +5,7 @@ import { IsNotEmpty } from 'class-validator'
 
 export class CreateProductDto {
    @IsNotEmpty()
-   name: string;
+   product_name: string;
 
    @IsNotEmpty()
    name_ascii: string;

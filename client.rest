@@ -1,11 +1,23 @@
 
-
-
+###
 POST http://localhost:3000/api/products
-Content-Type: 'application/json
+Content-Type: application/json
 
 {
    "name" : "iPhone 14 Pro",
-   "name_ascii": "iphone_14_pro",
-   "image_url": ""
+   "name_ascii": "iphone_14_pro"
 }
+
+
+###
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+   "category_name" : "Mobile Phone",
+   "category_ascii": "mobile-phone"
+}
+
+
+###
+GET http://localhost:3000/api/products?page=1&cagegory_id=1

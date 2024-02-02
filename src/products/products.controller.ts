@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -15,19 +17,25 @@ export class ProductsController {
 
   // GET /products
   @Get()
-  findAll(): string {
-    return this.productService.findAll();
+  findAll(
+    @Query('category_id', ParseIntPipe) category_id: number,
+    @Query('page', ParseIntPipe) page: number,
+  ) {
+    return this.productService.findAll(category_id, page);
   }
 
   //  GET /products/:id
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): string {
-    return this.productService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const product = await this.productService.findOne(id);
+    if (!product) throw new NotFoundException('Not found');
+    return product;
   }
 
   // POST /products
   @Post()
-  create(@Body() product: CreateProductDto) {
-    return this.productService.create(product);
+  async create(@Body() product: CreateProductDto) {
+    const newProduct = await this.productService.create(product);
+    return newProduct
   }
 }

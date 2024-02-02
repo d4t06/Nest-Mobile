@@ -15,10 +15,10 @@ import { DatabaseModule } from './database/database.module';
       envFilePath: ['.env.local'],
       isGlobal: true,
     }),
+    DatabaseModule,
     ProductsModule,
     CategoriesModule,
     SearchModule,
-    DatabaseModule,
   ],
 })
 export class AppModule {}

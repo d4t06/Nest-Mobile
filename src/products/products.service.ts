@@ -1,22 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
-import { EntityManager } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+    private readonly entityManager: EntityManager,
+  ) {}
 
-  findAll() {
-    return 'get products';
+  async findAll(category_id: number, page: number) {
+    const [products, count] = await this.productRepository.findAndCount();
+
+    return { products, count, page, category_id };
   }
 
   findOne(id: number) {
-    return 'get product id =' + id;
+    return this.productRepository.findOneBy({ id });
   }
 
   async create(createProductDto: CreateProductDto) {
+    console.log('check data', createProductDto);
+
     const item = new Product(createProductDto);
     await this.entityManager.save(item);
   }
