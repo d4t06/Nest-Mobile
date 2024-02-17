@@ -4,12 +4,18 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { EntityManager, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProductAttribute } from './entities/productAttribute.entity';
+import { CreateProductAttributeDto } from './dto/create-productAttribute.dto';
+import { UpdateProductAttributeDto } from './dto/update-productAttribute.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+
+    @InjectRepository(ProductAttribute)
+    private readonly productAttributeRepository: Repository<ProductAttribute>,
     private readonly entityManager: EntityManager,
   ) {}
 
@@ -22,16 +28,22 @@ export class ProductsService {
         category_id: 1,
       },
     });
-    return { products, count, page, category_id };
+    return { count, page, category_id, products };
   }
 
-  findOne(id: number) {
-    return this.productRepository.findOneBy({ id });
+  findOne(product_ascii: string) {
+    return this.productRepository.findOne({
+      where: { product_ascii },
+      relations: {
+        attributes: true,
+        category: {
+          attributes: true,
+        },
+      },
+    });
   }
 
   async create(createProductDto: CreateProductDto) {
-    console.log('check data', createProductDto);
-
     const item = new Product(createProductDto);
     const newProduct = await this.entityManager.save(item);
     return newProduct;
@@ -39,5 +51,18 @@ export class ProductsService {
 
   update(body: UpdateProductDto) {
     return body;
+  }
+
+  async delete(id: number) {
+    await this.productRepository.delete({ id });
+  }
+
+  async createAttribute(createDto: CreateProductAttributeDto[]) {
+    const newProduct = await this.productAttributeRepository.save(createDto);
+    return newProduct;
+  }
+
+  async updateAttribute(updateDto: UpdateProductAttributeDto, id: number) {
+    await this.productAttributeRepository.update(id, updateDto);
   }
 }

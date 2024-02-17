@@ -18,7 +18,11 @@ export class CategoryAttribute {
   @Column()
   category_id: number;
 
-  @ManyToOne(() => Category, (category) => category.attributes)
+  @ManyToOne(() => Category, (category) => category.attributes, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'category_id' })
   category: Category;
   // ***

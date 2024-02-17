@@ -19,7 +19,7 @@ const dbConfig: DataSourceOptions = {
   // TypeORM Entity
   entities: ['src/*/entities/*.entity.ts'],
   // Your Migration path
-  migrations: ['src/database/migrations/*.ts'],
+  migrations: ['migrations/*.ts'],
 };
 
 const dataSource = new DataSource(dbConfig);

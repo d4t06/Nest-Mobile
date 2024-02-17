@@ -10,7 +10,7 @@ import { Product } from './product.entity';
 import { CategoryAttribute } from '@/categories/entities/categoryAttribute.entity';
 
 @Entity({ name: 'Product_Attributes' })
-@Unique('check_unique',['category_attribute_id', 'product_id'])
+@Unique('check_unique', ['category_attribute_id', 'product_id'])
 export class ProductAttribute {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,7 +19,11 @@ export class ProductAttribute {
   @Column()
   product_id: number;
 
-  @ManyToOne(() => Product, (p) => p.id)
+  @ManyToOne(() => Product, (p) => p.id, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'product_id' })
   product: Product;
   // ***
@@ -28,15 +32,17 @@ export class ProductAttribute {
   @Column()
   category_attribute_id: number;
 
-  @ManyToOne(() => CategoryAttribute, (cA) => cA.id)
+  @ManyToOne(() => CategoryAttribute, (cA) => cA.id, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'category_attribute_id' })
   category_attribute: string;
   // ***
-  
+
   @Column({ type: 'text' })
   value: string;
-  
-
 
   constructor(item: Partial<ProductAttribute>) {
     Object.assign(this, item);

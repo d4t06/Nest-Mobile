@@ -18,7 +18,7 @@ export class Category {
     (categoryAttribute) => categoryAttribute.category,
     // not
     // (categoryAttribute) => categoryAttribute.category_id,
-    { cascade: true },
+    { onDelete: 'CASCADE', onUpdate: 'CASCADE' },
   )
   attributes: CategoryAttribute[];
 

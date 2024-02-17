@@ -26,19 +26,21 @@ export class Product {
   // ***
   @Column()
   category_id: number;
+  @ManyToOne(() => Category, (c) => c.id, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
 
-  @ManyToOne(() => Category, (c) => c.id)
   // this is the fk column name
   // must matches column name above
   @JoinColumn({ name: 'category_id' })
   // this is the alias column name
   category: Category;
-  // ***
 
+  // ***
   @OneToMany(
     () => ProductAttribute,
     (productAttribute) => productAttribute.product,
-    { cascade: true },
   )
   attributes: ProductAttribute[];
 
