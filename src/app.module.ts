@@ -6,6 +6,7 @@ import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SearchModule } from './search/search.module';
 import { DatabaseModule } from './database/database.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   controllers: [AppController],
@@ -19,6 +20,7 @@ import { DatabaseModule } from './database/database.module';
     ProductsModule,
     CategoriesModule,
     SearchModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}

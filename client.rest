@@ -34,7 +34,10 @@ Content-Type: application/json
 GET http://localhost:3001/api/products?page=1&category_id=1
 
 ###
-GET http://localhost:3001/api/products/iphone-12
+GET http://localhost:3001/api/products/iphone-14-pro
 
 ###
 GET  http://localhost:3001/api/categories
+
+###
+GET  http://localhost:3001/api/images?page=1

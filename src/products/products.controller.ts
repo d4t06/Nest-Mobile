@@ -13,6 +13,7 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateProductAttributeDto } from './dto/create-productAttribute.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -39,6 +40,13 @@ export class ProductsController {
   @Post()
   async create(@Body() product: CreateProductDto) {
     const newProduct = await this.productService.create(product);
+    return newProduct;
+  }
+
+  // POST /products
+  @Put(':id')
+  async update(@Body() updateDto: UpdateProductDto, @Param('id') id: number) {
+    const newProduct = await this.productService.update(updateDto, id);
     return newProduct;
   }
 

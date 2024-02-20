@@ -49,8 +49,8 @@ export class ProductsService {
     return newProduct;
   }
 
-  update(body: UpdateProductDto) {
-    return body;
+  update(updateDto: UpdateProductDto, id: number) {
+    this.productRepository.update(id, updateDto);
   }
 
   async delete(id: number) {
