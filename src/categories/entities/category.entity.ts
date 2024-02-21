@@ -22,6 +22,9 @@ export class Category {
   )
   attributes: CategoryAttribute[];
 
+  @Column({ nullable: true })
+  attributes_order: string;
+
   constructor(item: Partial<Category>) {
     Object.assign(this, item);
   }

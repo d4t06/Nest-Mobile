@@ -34,6 +34,7 @@ export class CategoriesService {
   }
 
   async update(updateDto: updateCategoryDto, id: number) {
+    console.log(updateDto);
     await this.categoryRepository.update(id, updateDto);
   }
 
@@ -53,10 +54,7 @@ export class CategoriesService {
     updateAttributeDto: updateCategoryAttributeDto,
     id: number,
   ) {
-    const newCategoryAttribute = await this.categoryAttributeRepository.update(
-      id,
-      updateAttributeDto,
-    );
+    await this.categoryAttributeRepository.update(id, updateAttributeDto);
   }
 
   async deleteAttribute(id: number) {
