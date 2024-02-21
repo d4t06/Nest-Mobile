@@ -25,7 +25,7 @@ export class ProductsService {
         category: true,
       },
       where: {
-        category_id: 1,
+        category_id: category_id,
       },
     });
     return { count, page, category_id, products };
