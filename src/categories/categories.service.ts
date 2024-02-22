@@ -34,7 +34,7 @@ export class CategoriesService {
   }
 
   async update(updateDto: updateCategoryDto, id: number) {
-    console.log(updateDto);
+    // console.log(updateDto);
     await this.categoryRepository.update(id, updateDto);
   }
 

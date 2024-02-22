@@ -43,6 +43,20 @@ export class ProductsService {
     });
   }
 
+  async findAllManagement(page: number) {
+    const [products, count] = await this.productRepository.findAndCount({
+      select: {
+        category: {
+          category_ascii: true,
+        },
+      },
+      relations: {
+        category: true,
+      },
+    });
+    return { count, page, products };
+  }
+
   async create(createProductDto: CreateProductDto) {
     const item = new Product(createProductDto);
     const newProduct = await this.entityManager.save(item);

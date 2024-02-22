@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -32,8 +31,22 @@ export class ProductsController {
   @Get(':product_ascii')
   async findOne(@Param('product_ascii') product_ascii: string) {
     const product = await this.productService.findOne(product_ascii);
-    if (!product) throw new NotFoundException('Not found');
     return product;
+  }
+
+  // GET /products/management
+  @Get('bla')
+  findAllManagement() {
+    return 'this route find all product';
+  }
+
+  @Get('test')
+  test() {
+
+    console.log('run here');
+    
+    // return this.productService.findAllManagement(page);
+    return 'this test route find all product';
   }
 
   // POST /products

@@ -33,8 +33,18 @@ Content-Type: application/json
 ###
 GET http://localhost:4000/api/products?page=1&category_id=2
 
+
 ###
-GET http://localhost:4000/api/products/iphone-14-pro
+GET http://localhost:4000/api/products/management
+
+
+###
+GET http://localhost:4000/api/products/test
+
+
+
+###
+GET http://localhost:4000/api/products/iphone-14-prolnlkjklj
 
 ###
 GET  http://localhost:4000/api/categories
@@ -43,4 +53,4 @@ GET  http://localhost:4000/api/categories
 GET  http://localhost:4000/api/images?page=1
 
 ###
-GET  http://localhost:4000/api/search?q=i
+GET  http://localhost:4000/api/search?q=iphone 14
