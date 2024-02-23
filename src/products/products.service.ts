@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, FindOptionsWhere, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductAttribute } from './entities/productAttribute.entity';
 import { CreateProductAttributeDto } from './dto/create-productAttribute.dto';
 import { UpdateProductAttributeDto } from './dto/update-productAttribute.dto';
+
+const PAGE_SIZE = +process.env.PAGE_SIZE || 20;
 
 @Injectable()
 export class ProductsService {
@@ -19,16 +21,24 @@ export class ProductsService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async findAll(category_id: number, page: number) {
+  async findAll(page: number, category_id: number) {
     const [products, count] = await this.productRepository.findAndCount({
       relations: {
         category: true,
+      },
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+      select: {
+        category: {
+          category_name: true,
+          category_ascii: true,
+        },
       },
       where: {
         category_id: category_id,
       },
     });
-    return { count, page, category_id, products };
+    return { count, page, category_id, page_size: PAGE_SIZE, products };
   }
 
   findOne(product_ascii: string) {

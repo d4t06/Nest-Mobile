@@ -22,9 +22,9 @@ export class ProductsController {
   @Get()
   findAll(
     @Query('page', ParseIntPipe) page: number,
-    @Query('category_id', ParseIntPipe) category_id: number,
+    @Query('category_id', ParseIntPipe) category_id?: number,
   ) {
-    return this.productService.findAll(category_id, page);
+    return this.productService.findAll(page, category_id);
   }
 
   //  GET /products/:id
@@ -32,21 +32,6 @@ export class ProductsController {
   async findOne(@Param('product_ascii') product_ascii: string) {
     const product = await this.productService.findOne(product_ascii);
     return product;
-  }
-
-  // GET /products/management
-  @Get('bla')
-  findAllManagement() {
-    return 'this route find all product';
-  }
-
-  @Get('test')
-  test() {
-
-    console.log('run here');
-    
-    // return this.productService.findAllManagement(page);
-    return 'this test route find all product';
   }
 
   // POST /products
