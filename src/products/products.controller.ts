@@ -13,6 +13,8 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateProductAttributeDto } from './dto/create-productAttribute.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { filterDto } from '@/products/dto/filter.dto';
+import { Product } from './entities/product.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -29,9 +31,14 @@ export class ProductsController {
 
   //  GET /products/:id
   @Get(':product_ascii')
-  async findOne(@Param('product_ascii') product_ascii: string) {
-    const product = await this.productService.findOne(product_ascii);
-    return product;
+  async findOne(
+    @Param('product_ascii') product_ascii: string,
+    @Query() filter: filterDto,
+  ): Promise<Product> {
+    if (filter.withCategory !== undefined)
+      return await this.productService.findOneWithCategory(product_ascii);
+
+    return await this.productService.findOne(product_ascii);
   }
 
   // POST /products

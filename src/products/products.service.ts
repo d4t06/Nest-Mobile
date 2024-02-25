@@ -22,26 +22,42 @@ export class ProductsService {
   ) {}
 
   async findAll(page: number, category_id: number) {
-    const [products, count] = await this.productRepository.findAndCount({
-      relations: {
-        category: true,
-      },
-      take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
-      select: {
-        category: {
-          category_name: true,
-          category_ascii: true,
-        },
-      },
-      where: {
-        category_id: category_id,
-      },
-    });
+    // const [products, count] = await this.productRepository.findAndCount({
+    //   relations: {
+    //     category: true,
+    //   },
+    //   take: PAGE_SIZE,
+    //   skip: (page - 1) * PAGE_SIZE,
+    //   select: {
+    //     category: {
+    //       category_name: true,
+    //       category_ascii: true,
+    //     },
+    //   },
+    //   where: {
+    //     category_id: category_id,
+    //   },
+    // });
+
+    const [products, count] = await this.productRepository
+      .createQueryBuilder('product')
+      .where('product.category_id = :category_id', { category_id: category_id })
+      .limit(10)
+      .getManyAndCount();
+
     return { count, page, category_id, page_size: PAGE_SIZE, products };
   }
 
   findOne(product_ascii: string) {
+    return this.productRepository.findOne({
+      where: { product_ascii },
+      relations: {
+        attributes: true,
+      },
+    });
+  }
+
+  findOneWithCategory(product_ascii: string) {
     return this.productRepository.findOne({
       where: { product_ascii },
       relations: {

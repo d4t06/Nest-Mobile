@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Timestamp,
 } from 'typeorm';
 import { ProductAttribute } from './productAttribute.entity';
 
@@ -22,6 +23,9 @@ export class Product {
 
   @Column({ nullable: true })
   image_url: string;
+
+  // @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  // created_at: string;
 
   // ***
   @Column()

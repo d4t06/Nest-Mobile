@@ -35,8 +35,8 @@ export class ImagesService {
 
   async findAll(page: number) {
     const images = await this.imageRepository.find({
-      skip: (page - 1) * 6,
-      take: 6,
+      skip: (page - 1) * 18,
+      take: 18,
     });
     return { page, images };
   }

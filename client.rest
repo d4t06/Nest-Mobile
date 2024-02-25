@@ -44,7 +44,19 @@ GET http://localhost:4000/api/products/test
 
 
 ###
-GET http://localhost:4000/api/products/iphone-14-prolnlkjklj
+GET http://localhost:4000/api/products/haylou-rs4-plus?withCategory
+
+###
+GET  http://localhost:4000/api/categories
+
+###
+GET  http://localhost:4000/api/categories/watch
+
+###
+GET  http://localhost:4000/api/categories/attributes
+
+###
+GET  http://localhost:4000/api/categories/products
 
 ###
 GET  http://localhost:4000/api/categories
@@ -53,4 +65,4 @@ GET  http://localhost:4000/api/categories
 GET  http://localhost:4000/api/images?page=1
 
 ###
-GET  http://localhost:4000/api/search?q=iphone 14
+GET  http://localhost:4000/api/search?q=iphone

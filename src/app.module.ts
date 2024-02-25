@@ -7,7 +7,6 @@ import { CategoriesModule } from './categories/categories.module';
 import { SearchModule } from './search/search.module';
 import { DatabaseModule } from './database/database.module';
 import { ImagesModule } from './images/images.module';
-import { ProductManagementModule } from './product-management/product-management.module';
 
 @Module({
   controllers: [AppController],
@@ -22,7 +21,6 @@ import { ProductManagementModule } from './product-management/product-management
     CategoriesModule,
     SearchModule,
     ImagesModule,
-    ProductManagementModule,
   ],
 })
 export class AppModule {}
