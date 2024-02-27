@@ -1,6 +1,7 @@
 import { Category } from 'src/categories/entities/category.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -47,6 +48,9 @@ export class Product {
     (productAttribute) => productAttribute.product,
   )
   attributes: ProductAttribute[];
+
+  @CreateDateColumn()
+  created_at: Date;
 
   constructor(product: Partial<Product>) {
     Object.assign(this, product);

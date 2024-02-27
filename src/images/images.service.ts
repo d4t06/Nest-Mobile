@@ -6,9 +6,8 @@ import { CloudinaryService } from './cloudinary.service';
 import { Image } from './entities/image.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { table } from 'console';
 
-const cloudinaryService = new CloudinaryService();
+const pageSize = +process.env.PAGE_SIZE || 18;
 
 @Injectable()
 export class ImagesService {
@@ -34,19 +33,13 @@ export class ImagesService {
   }
 
   async findAll(page: number) {
-    const images = await this.imageRepository.find({
-      skip: (page - 1) * 18,
-      take: 18,
-    });
-    return { page, images };
-  }
+    const [images, count] = await this.imageRepository
+      .createQueryBuilder('image')
+      .take(pageSize)
+      .skip((page - 1) * pageSize)
+      .getManyAndCount();
 
-  findOne(id: number) {
-    return `This action returns a #${id} image`;
-  }
-
-  update(id: number, updateImageDto: UpdateImageDto) {
-    return `This action updates a #${id} image`;
+    return { page, pageSize, count, images };
   }
 
   remove(id: number) {

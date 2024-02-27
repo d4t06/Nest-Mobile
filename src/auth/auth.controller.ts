@@ -6,6 +6,7 @@ import {
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
@@ -15,6 +16,8 @@ import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from './decorators/role.enum';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
+import { LoggingInterceptor } from './interceptors/login.interceptor';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 // class
 @Controller('auth')
@@ -24,6 +27,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
+  @UseInterceptors(LoggingInterceptor, ErrorInterceptor)
   signIn(
     @Body() signInDto: SignInDto,
     @Res({ passthrough: true }) response: Response,
@@ -46,9 +50,10 @@ export class AuthController {
   }
 
   @Get('/users')
-  @Roles(Role.Admin)
+  // @Throttle({ default: { limit: 2, ttl: 60000 } })
+  @Roles(Role.User)
   @UseGuards(AuthGuard, RolesGuard)
   findAll() {
-    return 'this route use Auth Guard';
+    return 'this route find all user';
   }
 }
