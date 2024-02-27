@@ -18,6 +18,7 @@ export class ProductsService {
 
     @InjectRepository(ProductAttribute)
     private readonly productAttributeRepository: Repository<ProductAttribute>,
+    
     private readonly entityManager: EntityManager,
   ) {}
 

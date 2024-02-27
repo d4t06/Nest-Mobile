@@ -7,6 +7,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { SearchModule } from './search/search.module';
 import { DatabaseModule } from './database/database.module';
 import { ImagesModule } from './images/images.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   controllers: [AppController],
@@ -21,6 +23,8 @@ import { ImagesModule } from './images/images.module';
     CategoriesModule,
     SearchModule,
     ImagesModule,
+    AuthModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

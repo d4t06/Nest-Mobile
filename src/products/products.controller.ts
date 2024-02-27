@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -15,6 +16,7 @@ import { CreateProductAttributeDto } from './dto/create-productAttribute.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { filterDto } from '@/products/dto/filter.dto';
 import { Product } from './entities/product.entity';
+import { AuthGuard } from '@/auth/guards/auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -43,6 +45,7 @@ export class ProductsController {
 
   // POST /products
   @Post()
+  @UseGuards(AuthGuard)
   async create(@Body() product: CreateProductDto) {
     const newProduct = await this.productService.create(product);
     return newProduct;
