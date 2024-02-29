@@ -22,4 +22,8 @@ export class CloudinaryService {
 
     return imageUploadRes;
   }
+
+  async deleteImage(public_id: string) {
+    await v2.uploader.destroy(public_id);
+  }
 }

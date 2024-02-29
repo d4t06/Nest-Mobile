@@ -71,7 +71,6 @@ GET  http://localhost:4000/api/categories
 ###
 GET  http://localhost:4000/api
 
-
 ###
 GET  http://localhost:4000/api/images?page=1
 

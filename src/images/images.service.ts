@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
-import { UpdateImageDto } from './dto/update-image.dto';
 import { generateId } from 'utils/apphelper';
 import { CloudinaryService } from './cloudinary.service';
 import { Image } from './entities/image.entity';
@@ -25,7 +24,7 @@ export class ImagesService {
       image_url: uploadRes.secure_url,
       name: generateId(file.originalname),
       public_id: uploadRes.public_id,
-      size: file.size,
+      size: Math.ceil(file.size / 1000),
     };
 
     const newImage = await this.imageRepository.save(createImageDto);
@@ -42,7 +41,8 @@ export class ImagesService {
     return { page, pageSize, count, images };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} image`;
+  async remove(public_id: string) {
+    await this.imageRepository.delete({ public_id });
+    await this.cloudinarySerive.deleteImage(public_id);
   }
 }
