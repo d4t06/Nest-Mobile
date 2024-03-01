@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
-import { jwtConstants } from './guards/contanst';
 
 @Injectable()
 export class AuthService {
@@ -23,19 +22,20 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const newToken = await this.jwtService.signAsync({
-      username: username,
-      role: foundedUser.role,
-    });
+    const newToken = await this.jwtService.signAsync(
+      {
+        username: username,
+        role: foundedUser.role,
+      },
+      { expiresIn: '1h' },
+    );
 
     const refresh_token = await this.jwtService.signAsync(
       {
         username: username,
         role: foundedUser.role,
       },
-      {
-        expiresIn: '1d',
-      },
+      { expiresIn: '1d' },
     );
 
     await this.userService.updateFreshToken(refresh_token, username);
@@ -45,7 +45,12 @@ export class AuthService {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    return { token: newToken };
+    return {
+      token: newToken,
+      user: {
+        name: username,
+      },
+    };
   }
 
   async register(createUserDto: CreateUserDto) {
@@ -60,15 +65,17 @@ export class AuthService {
 
     try {
       const payload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: jwtConstants.secret,
+        secret: process.env.JWT_SECRET,
       });
-
       const { username, role } = payload;
+
+      const foundedUser = await this.userService.findOne(username);
+      if (!foundedUser) throw new UnauthorizedException();
 
       const newToken = await this.jwtService.signAsync(
         { username, role },
         {
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_SECRET,
         },
       );
 

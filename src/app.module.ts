@@ -15,16 +15,16 @@ import { APP_GUARD } from '@nestjs/core';
 @Module({
   controllers: [AppController],
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local'],
+      isGlobal: true,
+    }),
     ThrottlerModule.forRoot([
       {
         ttl: 60 * 1000,
         limit: 100,
       },
     ]),
-    ConfigModule.forRoot({
-      envFilePath: ['.env.local'],
-      isGlobal: true,
-    }),
     DatabaseModule,
     ProductsModule,
     CategoriesModule,
