@@ -4,16 +4,21 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
-import { SearchModule } from './search/search.module';
 import { DatabaseModule } from './database/database.module';
 import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { InitController } from './init/init.controller';
+import { BrandModule } from './brand/brand.module';
+import { DescriptionModule } from './description/description.module';
+import { GreetingController } from './greeting/greeting.controller';
+import { ProductAttributeModule } from './product-attribute/product-attribute.module';
+import { CategoryAttributeModule } from './category-attribute/category-attribute.module';
 
 @Module({
-  controllers: [AppController],
+  controllers: [AppController, InitController, GreetingController],
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env.local'],
@@ -21,17 +26,20 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     ThrottlerModule.forRoot([
       {
-        ttl: 60 * 1000,
-        limit: 100,
+        ttl: 60,
+        limit: 1000,
       },
     ]),
     DatabaseModule,
     ProductsModule,
     CategoriesModule,
-    SearchModule,
     ImagesModule,
     AuthModule,
     UsersModule,
+    BrandModule,
+    DescriptionModule,
+    ProductAttributeModule,
+    CategoryAttributeModule,
   ],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

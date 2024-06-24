@@ -24,9 +24,9 @@ export class AuthGuard implements CanActivate {
 
       request['user'] = payload;
 
-      console.log('>>> inside auth guard payload', payload);
+      console.log('>>> inside auth guard payload' , payload);
     } catch (error) {
-      console.log('>>> verify token fail');
+      console.log('Auth guard, verify token fail');
       throw new UnauthorizedException();
     }
 
@@ -35,8 +35,7 @@ export class AuthGuard implements CanActivate {
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-
-    if (type === 'bearer') return token;
+    if (type === 'Bearer') return token;
     else undefined;
   }
 }

@@ -9,7 +9,7 @@ import {
 import { Category } from '@/categories/entities/category.entity';
 
 @Entity({ name: 'Category_Attributes' })
-@Unique('check_unique', ['category_id', 'attribute_ascii'])
+@Unique('check_unique', ['category_id', 'attribute_name_ascii'])
 export class CategoryAttribute {
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,7 +28,7 @@ export class CategoryAttribute {
   // ***
 
   @Column()
-  attribute_ascii: string;
+  attribute_name_ascii: string;
 
   @Column()
   attribute_name: string;

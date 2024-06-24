@@ -6,10 +6,12 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
-  Timestamp,
 } from 'typeorm';
-import { ProductAttribute } from './productAttribute.entity';
+import { Description } from '@/description/entities/description.entity';
+import { ProductAttribute } from '@/product-attribute/entities/product-attribute.entity';
+import { Brand } from '@/brand/entities/brand.entity';
 
 @Entity({ name: 'Products' })
 export class Product {
@@ -20,7 +22,7 @@ export class Product {
   product_name: string;
 
   @Column({ unique: true })
-  product_ascii: string;
+  product_name_ascii: string;
 
   @Column({ nullable: true })
   image_url: string;
@@ -33,7 +35,6 @@ export class Product {
   category_id: number;
   @ManyToOne(() => Category, (c) => c.id, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
 
   // this is the fk column name
@@ -41,6 +42,19 @@ export class Product {
   @JoinColumn({ name: 'category_id' })
   // this is the alias column name
   category: Category;
+
+  // ***
+  @Column({ nullable: true })
+  brand_id: number;
+  @ManyToOne(() => Brand, (c) => c.id, {
+    onDelete: 'SET NULL',
+  })
+
+  // this is the fk column name
+  // must matches column name above
+  @JoinColumn({ name: 'brand_id' })
+  // this is the alias column name
+  brand: Brand;
 
   // ***
   @OneToMany(
@@ -51,6 +65,9 @@ export class Product {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToOne(() => Description, (description) => description.product)
+  description: Description;
 
   constructor(product: Partial<Product>) {
     Object.assign(this, product);

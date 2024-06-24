@@ -27,28 +27,14 @@ export class AuthService {
         username: username,
         role: foundedUser.role,
       },
-      { expiresIn: '1h' },
+      { expiresIn: '2d' },
     );
-
-    const refresh_token = await this.jwtService.signAsync(
-      {
-        username: username,
-        role: foundedUser.role,
-      },
-      { expiresIn: '1d' },
-    );
-
-    await this.userService.updateFreshToken(refresh_token, username);
-
-    response.cookie('jwt', refresh_token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
 
     return {
       token: newToken,
       user: {
         name: username,
+        role: foundedUser.role,
       },
     };
   }
@@ -78,6 +64,8 @@ export class AuthService {
           secret: process.env.JWT_SECRET,
         },
       );
+
+      console.log('refresh check new token', newToken);
 
       return { token: newToken };
     } catch (error) {

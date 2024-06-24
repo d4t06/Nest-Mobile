@@ -1,12 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { CreateProductDto } from './dto/create-product.dto';
-import { EntityManager, Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UpdateProductDto } from './dto/update.product.dto';
+import { CreateProductDto } from './dto/create.product.dto';
+import { EntityManager, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductAttribute } from './entities/productAttribute.entity';
-import { CreateProductAttributeDto } from './dto/create-productAttribute.dto';
-import { UpdateProductAttributeDto } from './dto/update-productAttribute.dto';
+import { Description } from '@/description/entities/description.entity';
+import { generateId } from 'utils/apphelper';
 
 const PAGE_SIZE = +process.env.PAGE_SIZE || 20;
 
@@ -16,94 +15,94 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
 
-    @InjectRepository(ProductAttribute)
-    private readonly productAttributeRepository: Repository<ProductAttribute>,
-    
+    @InjectRepository(Description)
+    private readonly descriptionRepository: Repository<Description>,
+
     private readonly entityManager: EntityManager,
   ) {}
 
   async findAll(page: number, category_id: number) {
-    // const [products, count] = await this.productRepository.findAndCount({
-    //   relations: {
-    //     category: true,
-    //   },
-    //   take: PAGE_SIZE,
-    //   skip: (page - 1) * PAGE_SIZE,
-    //   select: {
-    //     category: {
-    //       category_name: true,
-    //       category_ascii: true,
-    //     },
-    //   },
-    //   where: {
-    //     category_id: category_id,
-    //   },
-    // });
+    const where: FindOptionsWhere<Product> = {};
 
-    const [products, count] = await this.productRepository
-      .createQueryBuilder('product')
-      .where('product.category_id = :category_id', { category_id: category_id })
-      .limit(10)
-      .getManyAndCount();
+    if (category_id) {
+      where.category_id = category_id;
+    }
 
-    return { count, page, category_id, page_size: PAGE_SIZE, products };
-  }
-
-  findOne(product_ascii: string) {
-    return this.productRepository.findOne({
-      where: { product_ascii },
-      relations: {
-        attributes: true,
-      },
-    });
-  }
-
-  findOneWithCategory(product_ascii: string) {
-    return this.productRepository.findOne({
-      where: { product_ascii },
-      relations: {
-        attributes: true,
-        category: {
-          attributes: true,
-        },
-      },
-    });
-  }
-
-  async findAllManagement(page: number) {
     const [products, count] = await this.productRepository.findAndCount({
-      select: {
-        category: {
-          category_ascii: true,
-        },
-      },
       relations: {
         category: true,
       },
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+      where,
     });
-    return { count, page, products };
+
+    // const [products, count] = await this.productRepository
+    //   .createQueryBuilder('product')
+    //   .where('product.category_id = :category_id', { category_id: category_id })
+    //   .limit(10)
+    //   .getManyAndCount();
+
+    return {
+      count,
+      page,
+      category_id: category_id || null,
+      page_size: PAGE_SIZE,
+      products,
+    };
+  }
+
+  async findOne(productId: number) {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+      relations: {
+        attributes: true,
+        description: true,
+      },
+    });
+
+    if (!product) throw new NotFoundException('product not found');
+
+    return product;
+  }
+
+  async search(q: string) {
+    const products = await this.productRepository.find({
+      where: {
+        product_name_ascii: Like(`%${generateId(q)}%`),
+      },
+    });
+
+    if (products.length) return products;
+    return [];
   }
 
   async create(createProductDto: CreateProductDto) {
     const item = new Product(createProductDto);
     const newProduct = await this.entityManager.save(item);
+
+    // create description
+    const description = new Description({
+      content: newProduct.product_name,
+      product_id: newProduct.id,
+    });
+
+    await this.descriptionRepository.save(description);
+
     return newProduct;
   }
 
-  update(updateDto: UpdateProductDto, id: number) {
-    this.productRepository.update(id, updateDto);
+  async update(updateDto: UpdateProductDto, id: number) {
+    return await this.productRepository.update(id, updateDto);
   }
 
   async delete(id: number) {
-    await this.productRepository.delete({ id });
-  }
+    const product = await this.productRepository.findOne({
+      where: { id },
+    });
 
-  async createAttribute(createDto: CreateProductAttributeDto[]) {
-    const newProduct = await this.productAttributeRepository.save(createDto);
-    return newProduct;
-  }
+    if (!product) throw new NotFoundException('product not found');
 
-  async updateAttribute(updateDto: UpdateProductAttributeDto, id: number) {
-    await this.productAttributeRepository.update(id, updateDto);
+    return await this.productRepository.delete({ id });
   }
 }

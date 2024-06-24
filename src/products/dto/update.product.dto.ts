@@ -1,4 +1,4 @@
-import {CreateProductDto} from './create-product.dto'
+import {CreateProductDto} from './create.product.dto'
 import {PartialType} from '@nestjs/mapped-types'
 
 

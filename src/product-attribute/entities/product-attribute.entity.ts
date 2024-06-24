@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Product } from './product.entity';
-import { CategoryAttribute } from '@/categories/entities/categoryAttribute.entity';
+import { Product } from '@/products/entities/product.entity';
+import { CategoryAttribute } from '@/category-attribute/entities/category-attribute.entity';
 
 @Entity({ name: 'Product_Attributes' })
 @Unique('check_unique', ['category_attribute_id', 'product_id'])

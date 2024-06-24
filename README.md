@@ -14,6 +14,35 @@ Have access to the ExecutionContext instance
 - Transform the result return from controller before send to client
 - Bind extra logic before/ after method execution 
 
+## Model define
+- Use `@OneToMany`, `@ManyToOne` is required
+```
+@ManyToOne(type => Category)
+@JoinColumn()
+category: Category;
+```
+- `@JoinColumn()` this decorator is optional for @ManyToOne, but required for @OneToOne
+- `@ManyToOne(type => Category)` this code will create column __categoryId = propertyName + referencedColumnName__ in the table, to change change this name can specify the join column name `@JoinColumn({ name: "cat_id" })`
+- Define ManyToOne is __define foreign__ key constraint
+- Always refers to the primary column of the related entity
+
+```
+@Entity({ name: 'Brands' })
+export class Brand {
+  @PrimaryGeneratedColumn()
+  id: number;
+}
+```
+
+```
+  @ManyToOne(() => Category, () => {}, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+```
+- cascade when set true, the relation object will auto save, no need to call save() one by one object 
+
+
 ### update thu 5 1/2/2024
 
 nest g module --name for modules
