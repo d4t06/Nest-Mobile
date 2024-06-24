@@ -1,0 +1,1 @@
+{"version":3,"file":"error.interceptor.js","sourceRoot":"","sources":["../../../../src/auth/interceptors/error.interceptor.ts"],"names":[],"mappings":";;;AAGA,MAAa,gBAAgB;IAC3B,SAAS,CACP,OAAyB,EACzB,IAAsB;QAEtB,OAAO,CAAC,GAAG,CAAC,mBAAmB,CAAC,CAAC;QAEjC,OAAO,IAAI,CAAC,MAAM,EAAE,CAAC;IACvB,CAAC;CACF;AATD,4CASC"}
