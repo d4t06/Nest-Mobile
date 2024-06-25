@@ -6,7 +6,7 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
         credentials: true,
-        origin: ['http://localhost:3000', 'https://d4t06.github.io'],
+        origin: ['http://localhost:3000', 'https://next-mobile-ebon.vercel.app'],
     });
     app.setGlobalPrefix('api');
     await app.listen(process.env.PORT || 4000, () => {
