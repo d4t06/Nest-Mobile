@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloudinaryService = void 0;
 const cloudinary_1 = require("cloudinary");
+const sharp_1 = __importDefault(require("sharp"));
 class CloudinaryService {
     constructor() {
         cloudinary_1.v2.config({
@@ -12,7 +16,10 @@ class CloudinaryService {
     }
     async uploadImage(file) {
         const { buffer, mimetype } = file;
-        const b64 = Buffer.from(buffer).toString('base64');
+        const newImageBuffer = await (0, sharp_1.default)(buffer)
+            .resize({ height: 720, fit: 'cover' })
+            .toBuffer();
+        const b64 = Buffer.from(newImageBuffer).toString('base64');
         let dataURI = 'data:' + mimetype + ';base64,' + b64;
         const imageUploadRes = await cloudinary_1.v2.uploader.upload(dataURI, {
             folder: 'mobile-wars',
