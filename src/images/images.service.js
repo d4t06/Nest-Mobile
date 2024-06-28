@@ -31,7 +31,7 @@ let ImagesService = class ImagesService {
             image_url: uploadRes.secure_url,
             name: (0, apphelper_1.generateId)(file.originalname),
             public_id: uploadRes.public_id,
-            size: Math.ceil(file.size / 1000),
+            size: Math.ceil(uploadRes.bytes / 1000),
         };
         const newImage = await this.imageRepository.save(createImageDto);
         return newImage;
