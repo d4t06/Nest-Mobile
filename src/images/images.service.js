@@ -19,7 +19,7 @@ const cloudinary_service_1 = require("./cloudinary.service");
 const image_entity_1 = require("./entities/image.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const pageSize = +process.env.PAGE_SIZE || 18;
+const pageSize = +process.env.PAGE_SIZE || 2;
 let ImagesService = class ImagesService {
     constructor(imageRepository, cloudinarySerive) {
         this.imageRepository = imageRepository;
