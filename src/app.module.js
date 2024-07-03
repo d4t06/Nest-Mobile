@@ -38,8 +38,8 @@ exports.AppModule = AppModule = __decorate([
             }),
             throttler_1.ThrottlerModule.forRoot([
                 {
-                    ttl: 60,
-                    limit: 1000,
+                    ttl: 10000,
+                    limit: 20,
                 },
             ]),
             database_module_1.DatabaseModule,

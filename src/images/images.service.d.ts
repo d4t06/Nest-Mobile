@@ -10,7 +10,7 @@ export declare class ImagesService {
     create(file: Express.Multer.File): Promise<CreateImageDto & Image>;
     findAll(page: number): Promise<{
         page: number;
-        pageSize: number;
+        page_size: number;
         count: number;
         images: Image[];
     }>;

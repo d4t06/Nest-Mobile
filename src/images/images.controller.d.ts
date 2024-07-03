@@ -6,7 +6,7 @@ export declare class ImagesController {
     create(file: Express.Multer.File): Promise<import("./dto/create-image.dto").CreateImageDto & import("./entities/image.entity").Image>;
     findAll(page: number): Promise<{
         page: number;
-        pageSize: number;
+        page_size: number;
         count: number;
         images: import("./entities/image.entity").Image[];
     }>;

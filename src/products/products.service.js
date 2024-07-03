@@ -19,7 +19,7 @@ const product_entity_1 = require("./entities/product.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const description_entity_1 = require("../description/entities/description.entity");
 const apphelper_1 = require("../../utils/apphelper");
-const PAGE_SIZE = +process.env.PAGE_SIZE || 20;
+const PAGE_SIZE = +process.env.PAGE_SIZE || 6;
 let ProductsService = class ProductsService {
     constructor(productRepository, descriptionRepository, entityManager) {
         this.productRepository = productRepository;
@@ -28,15 +28,16 @@ let ProductsService = class ProductsService {
     }
     async findAll(page, category_id) {
         const where = {};
+        console.log('get products');
         if (category_id) {
             where.category_id = category_id;
         }
         const [products, count] = await this.productRepository.findAndCount({
-            relations: {
-                category: true,
-            },
             take: PAGE_SIZE,
             skip: (page - 1) * PAGE_SIZE,
+            order: {
+                id: 'DESC',
+            },
             where,
         });
         return {
