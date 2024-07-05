@@ -17,7 +17,7 @@ class CloudinaryService {
     async uploadImage(file) {
         const { buffer, mimetype } = file;
         const newImageBuffer = await (0, sharp_1.default)(buffer)
-            .resize({ height: 720, fit: 'cover', withoutEnlargement: true })
+            .resize({ height: 900, fit: 'cover', withoutEnlargement: true })
             .toBuffer();
         const b64 = Buffer.from(newImageBuffer).toString('base64');
         let dataURI = 'data:' + mimetype + ';base64,' + b64;
