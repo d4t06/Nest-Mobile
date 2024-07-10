@@ -26,8 +26,9 @@ import { CategoryAttributeModule } from './category-attribute/category-attribute
     }),
     ThrottlerModule.forRoot([
       {
-        ttl: 60,
-        limit: 1000,
+        // time to live
+        ttl: 10000,
+        limit: 20,
       },
     ]),
     DatabaseModule,

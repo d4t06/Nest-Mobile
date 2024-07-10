@@ -26,7 +26,7 @@ export class ProductsController {
   @Get()
   findAll(
     @Query('page', ParseIntPipe) page: number,
-    @Query('category_id') category_id: number,
+    @Query('category_id', ParseIntPipe) category_id: number,
   ) {
     return this.productService.findAll(page, category_id);
   }

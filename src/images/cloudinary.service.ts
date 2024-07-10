@@ -1,4 +1,5 @@
 import { v2 } from 'cloudinary';
+import sharp from 'sharp';
 
 export class CloudinaryService {
   constructor() {
@@ -12,7 +13,13 @@ export class CloudinaryService {
   async uploadImage(file: Express.Multer.File) {
     const { buffer, mimetype } = file;
 
-    const b64 = Buffer.from(buffer).toString('base64');
+    const newImageBuffer = await sharp(buffer)
+      .resize({ height: 1080, fit: 'cover', withoutEnlargement: true })
+      .toBuffer();
+
+    // withoutEnlargement, max height is image height
+
+    const b64 = Buffer.from(newImageBuffer).toString('base64');
     let dataURI = 'data:' + mimetype + ';base64,' + b64;
 
     const imageUploadRes = await v2.uploader.upload(dataURI, {

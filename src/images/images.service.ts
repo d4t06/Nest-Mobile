@@ -6,7 +6,7 @@ import { Image } from './entities/image.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-const pageSize = +process.env.PAGE_SIZE || 18;
+const PAGE_SIZE = +process.env.PAGE_SIZE || 6;
 
 @Injectable()
 export class ImagesService {
@@ -24,7 +24,7 @@ export class ImagesService {
       image_url: uploadRes.secure_url,
       name: generateId(file.originalname),
       public_id: uploadRes.public_id,
-      size: Math.ceil(file.size / 1000),
+      size: Math.ceil(uploadRes.bytes / 1000),
     };
 
     const newImage = await this.imageRepository.save(createImageDto);
@@ -32,13 +32,15 @@ export class ImagesService {
   }
 
   async findAll(page: number) {
-    const [images, count] = await this.imageRepository
-      .createQueryBuilder('image')
-      .take(pageSize)
-      .skip((page - 1) * pageSize)
-      .getManyAndCount();
+    const [images, count] = await this.imageRepository.findAndCount({
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+      order: {
+        id: 'DESC',
+      },
+    });
 
-    return { page, pageSize, count, images };
+    return { page, page_size: PAGE_SIZE, count, images };
   }
 
   async remove(public_id: string) {
