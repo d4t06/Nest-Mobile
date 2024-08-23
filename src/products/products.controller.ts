@@ -17,6 +17,9 @@ import { CreateProductDto } from './dto/create.product.dto';
 import { UpdateProductDto } from './dto/update.product.dto';
 import { Product } from './entities/product.entity';
 import { AuthGuard } from '@/auth/guards/auth.guard';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { Role } from '@/auth/decorators/role.enum';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -26,7 +29,7 @@ export class ProductsController {
   @Get()
   findAll(
     @Query('page', ParseIntPipe) page: number,
-    @Query('category_id', ParseIntPipe) category_id: number,
+    @Query('category_id') category_id: string,
   ) {
     return this.productService.findAll(page, category_id);
   }
@@ -45,16 +48,18 @@ export class ProductsController {
 
   // POST /products
   @Post()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UsePipes(ValidationPipe)
-  async create(@Body() product: CreateProductDto) {
+  async create( @Body() product: CreateProductDto) {
     const newProduct = await this.productService.create(product);
     return newProduct;
   }
 
   // POST /products
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async update(
     @Body() updateDto: UpdateProductDto,
     @Param('id', ParseIntPipe) id: number,
@@ -65,7 +70,8 @@ export class ProductsController {
 
   // Delete /products
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async delete(@Param('id', ParseIntPipe) id: number) {
     await this.productService.delete(id);
   }

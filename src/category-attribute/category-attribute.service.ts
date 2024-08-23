@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryAttribute } from './entities/category-attribute.entity';
 import { Repository } from 'typeorm';
@@ -13,7 +13,18 @@ export class CategoryAttributeService {
   ) {}
 
   async create(categoryAttributeDto: CreateCategoryAttributeDto) {
+    const founded = await this.categoryAttributeRepository.findOne({
+      where: {
+        attribute_name_ascii: categoryAttributeDto.attribute_name_ascii,
+      },
+    });
+
+    console.log('check ', founded);
+
+    if (founded) throw new ConflictException('');
+
     const categoryAttribute = new CategoryAttribute(categoryAttributeDto);
+
     return await this.categoryAttributeRepository.save(categoryAttribute);
   }
 

@@ -20,6 +20,7 @@ const dbConfig: DataSourceOptions = {
   entities: ['src/*/entities/*.entity.ts'],
   // Your Migration path
   migrations: ['migrations/*.ts'],
+// 
 };
 
 const dataSource = new DataSource(dbConfig);

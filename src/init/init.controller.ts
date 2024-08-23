@@ -12,7 +12,6 @@ export class InitController {
       password: createDto.password,
       username: 'admin',
       role: 'ADMIN',
-      refresh_token: '',
     };
 
     this.userService.addOne(user);

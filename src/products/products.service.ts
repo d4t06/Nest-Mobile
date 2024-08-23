@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update.product.dto';
 import { CreateProductDto } from './dto/create.product.dto';
 import { EntityManager, FindOptionsWhere, Like, Repository } from 'typeorm';
@@ -21,12 +21,12 @@ export class ProductsService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async findAll(page: number, category_id: number) {
+  async findAll(page: number, category_id: string) {
     const where: FindOptionsWhere<Product> = {};
     console.log('get products');
 
-    if (category_id) {
-      where.category_id = category_id;
+    if (category_id && !isNaN(+category_id)) {
+      where.category_id = +category_id;
     }
 
     const [products, count] = await this.productRepository.findAndCount({
@@ -79,6 +79,12 @@ export class ProductsService {
   }
 
   async create(createProductDto: CreateProductDto) {
+    const foundedProduct = await this.productRepository.findOne({
+      where: { product_name_ascii: createProductDto.product_name_ascii },
+    });
+
+    if (foundedProduct) throw new ConflictException("Product name had taken")
+
     const item = new Product(createProductDto);
     const newProduct = await this.entityManager.save(item);
 

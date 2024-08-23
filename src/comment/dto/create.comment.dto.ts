@@ -1,8 +1,9 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsNumber } from "class-validator";
 
 
 export class CreateCommentDto {
    @IsNotEmpty({ message: 'product_id is required' })
+   @IsNumber()
    product_id: number;
 
    @IsNotEmpty({ message: 'username is required' })

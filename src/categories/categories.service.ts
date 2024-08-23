@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { EntityManager, Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
@@ -25,9 +25,16 @@ export class CategoriesService {
   }
 
   async create(categoryDto: CreateCategoryDto) {
+    const founded = await this.categoryRepository.findOne({
+      where: {
+        category_name_ascii: categoryDto.category_name_ascii,
+      },
+    });
+
+    if (founded) throw new ConflictException('');
+
     const category = new Category(categoryDto);
-    const newCategory = await this.entityManager.save(category);
-    return newCategory;
+    return await this.entityManager.save(category);
   }
 
   async update(updateDto: updateCategoryDto, id: number) {

@@ -39,4 +39,9 @@ export class Comment {
 
   @CreateDateColumn()
   created_at: Date;
+
+
+  constructor(item: Partial<Comment>) {
+    Object.assign(this, item);
+  }
 }

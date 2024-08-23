@@ -15,9 +15,11 @@ import {
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { updateCategoryDto } from './dto/update-category.dto';
-import { filterDto } from './dto/filter.dto';
 import { Category } from './entities/category.entity';
 import { AuthGuard } from '@/auth/guards/auth.guard';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { Role } from '@/auth/decorators/role.enum';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 
 @Controller('categories')
 export class CategoriesController {
@@ -29,14 +31,16 @@ export class CategoriesController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UsePipes(ValidationPipe)
   create(@Body() createDto: CreateCategoryDto): Promise<Category> {
     return this.categoriesService.create(createDto);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   update(
     @Body() updateDto: updateCategoryDto,
     @Param('id', ParseIntPipe) id: number,
@@ -45,7 +49,8 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.categoriesService.delete(id);
   }

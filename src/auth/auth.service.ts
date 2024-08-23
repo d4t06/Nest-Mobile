@@ -43,33 +43,33 @@ export class AuthService {
     return await this.userService.addOne(createUserDto);
   }
 
-  async refreshToken(request: Request) {
-    const cookies = request.cookies;
-    const refreshToken = cookies.jwt;
+  // async refreshToken(request: Request) {
+  //   const cookies = request.cookies;
+  //   const refreshToken = cookies.jwt;
 
-    if (!refreshToken) throw new UnauthorizedException();
+  //   if (!refreshToken) throw new UnauthorizedException();
 
-    try {
-      const payload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: process.env.JWT_SECRET,
-      });
-      const { username, role } = payload;
+  //   try {
+  //     const payload = await this.jwtService.verifyAsync(refreshToken, {
+  //       secret: process.env.JWT_SECRET,
+  //     });
+  //     const { username, role } = payload;
 
-      const foundedUser = await this.userService.findOne(username);
-      if (!foundedUser) throw new UnauthorizedException();
+  //     const foundedUser = await this.userService.findOne(username);
+  //     if (!foundedUser) throw new UnauthorizedException();
 
-      const newToken = await this.jwtService.signAsync(
-        { username, role },
-        {
-          secret: process.env.JWT_SECRET,
-        },
-      );
+  //     const newToken = await this.jwtService.signAsync(
+  //       { username, role },
+  //       {
+  //         secret: process.env.JWT_SECRET,
+  //       },
+  //     );
 
-      console.log('refresh check new token', newToken);
+  //     console.log('refresh check new token', newToken);
 
-      return { token: newToken };
-    } catch (error) {
-      throw new ForbiddenException();
-    }
-  }
+  //     return { token: newToken };
+  //   } catch (error) {
+  //     throw new ForbiddenException();
+  //   }
+  // }
 }

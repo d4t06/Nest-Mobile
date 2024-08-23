@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { EntityManager, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(
+    private readonly entityManager: EntityManager,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   async findOne(username: string) {
     return await this.entityManager
@@ -16,8 +20,21 @@ export class UsersService {
   }
 
   async addOne(user: CreateUserDto) {
-    const newUser = new User(user);
-    await this.entityManager.save(newUser);
+    const foundedUser = await this.userRepository.findOne({
+      where: {
+        username: user.username,
+      },
+    });
+
+    console.log(foundedUser);
+  
+
+    if (foundedUser) throw new ConflictException('Username had taken');
+
+    await this.userRepository.save(user);
+
+    // const newUser = new User(user);
+    // await this.entityManager.save(newUser);
 
     return 'ok';
   }

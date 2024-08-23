@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -15,7 +14,9 @@ import {
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create.comment.dto';
 import { AuthGuard } from '@/auth/guards/auth.guard';
-import { UpdateCommentDto } from './dto/update.comment.dto';
+import { RolesGuard } from '@/auth/guards/roles.guard';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { Role } from '@/auth/decorators/role.enum';
 
 @Controller('comments')
 export class CommentController {
@@ -37,28 +38,23 @@ export class CommentController {
   }
 
   @Post('')
+  // @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UsePipes(ValidationPipe)
   add(@Body() dto: CreateCommentDto) {
     return this.CommentService.add(dto);
   }
 
-  //   @Get('all')
-  //   @UseGuards(AuthGuard)
-  //   findComment(
-  //     @Query('page', ParseIntPipe) page: number,
-  //     @Query('size', ParseIntPipe) size: number,
-  //   ) {
-  //     return this.CommentService.findAllComment(page, size);
-  //   }
-
-  @Put(':id')
-  @UseGuards(AuthGuard)
-  approve(@Param('id') id: number, @Body() dto: UpdateCommentDto) {
-    return this.CommentService.approve(dto, id);
+  @Put('')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  approve(@Body() data: { id_list: number[] }) {
+    return this.CommentService.approve(data.id_list);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   delete(@Param('id') id: number) {
     return this.CommentService.delete(id);
   }

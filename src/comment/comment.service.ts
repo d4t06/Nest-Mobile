@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, In, Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from './dto/create.comment.dto';
-import { UpdateCommentDto } from './dto/update.comment.dto';
+import { date_diff } from 'utils/apphelper';
 
-const PAGE_SIZE = +process.env.PAGE_SIZE || 6;
+const PAGE_SIZE = +process.env.PAGE_SIZE || 12;
 
 @Injectable()
 export class CommentService {
@@ -39,10 +39,9 @@ export class CommentService {
     product_id: string,
     approved: string,
   ) {
-    const _productId =
-      product_id && typeof product_id === 'string' && +product_id;
+    const _productId = typeof product_id === 'string' && +product_id;
     const _size =
-      (size && typeof size === 'string' && +size < 12 && +size) || 1;
+      (typeof size === 'string' && +size < PAGE_SIZE && +size) || PAGE_SIZE;
     const _page = (page && typeof page === 'string' && +page) || 1;
 
     const where: FindOneOptions<Comment>['where'] = {};
@@ -64,6 +63,13 @@ export class CommentService {
       where,
     });
 
+    if (comments.length) {
+      for (let index = 0; index < comments.length; index++) {
+        const dateDiff = date_diff(comments[index].created_at);
+        comments[index].date_diff = dateDiff;
+      }
+    }
+
     return {
       comments,
       count,
@@ -75,13 +81,22 @@ export class CommentService {
   }
 
   async add(createDto: CreateCommentDto) {
-    const newComment = await this.commentRepository.save(createDto);
+    const comment = new Comment({
+      ...createDto,
+      approved: false,
+      date_diff: '',
+    });
+
+    const newComment = await this.commentRepository.save(comment);
 
     return newComment;
   }
 
-  async approve(updateDto: UpdateCommentDto, id: number) {
-    return await this.commentRepository.update(id, updateDto);
+  async approve(id_list: number[]) {
+    return await this.commentRepository.update(
+      { id: In(id_list) },
+      { approved: true },
+    );
   }
 
   async delete(id: number) {
