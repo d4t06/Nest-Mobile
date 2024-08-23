@@ -33,9 +33,6 @@ let AuthController = class AuthController {
     register(createDto) {
         return this.authService.register(createDto);
     }
-    refresh(request) {
-        return this.authService.refreshToken(request);
-    }
     findAll() {
         return 'this route find all user';
     }
@@ -52,18 +49,12 @@ __decorate([
 ], AuthController.prototype, "signIn", null);
 __decorate([
     (0, common_1.Post)('/register'),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "register", null);
-__decorate([
-    (0, common_1.Get)('/refresh'),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "refresh", null);
 __decorate([
     (0, common_1.Get)('/users'),
     (0, roles_decorator_1.Roles)(role_enum_1.Role.User),

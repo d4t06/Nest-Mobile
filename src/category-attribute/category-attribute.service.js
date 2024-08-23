@@ -22,6 +22,14 @@ let CategoryAttributeService = class CategoryAttributeService {
         this.categoryAttributeRepository = categoryAttributeRepository;
     }
     async create(categoryAttributeDto) {
+        const founded = await this.categoryAttributeRepository.findOne({
+            where: {
+                attribute_name_ascii: categoryAttributeDto.attribute_name_ascii,
+            },
+        });
+        console.log('check ', founded);
+        if (founded)
+            throw new common_1.ConflictException('');
         const categoryAttribute = new category_attribute_entity_1.CategoryAttribute(categoryAttributeDto);
         return await this.categoryAttributeRepository.save(categoryAttribute);
     }

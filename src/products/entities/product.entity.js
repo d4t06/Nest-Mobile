@@ -15,6 +15,7 @@ const typeorm_1 = require("typeorm");
 const description_entity_1 = require("../../description/entities/description.entity");
 const product_attribute_entity_1 = require("../../product-attribute/entities/product-attribute.entity");
 const brand_entity_1 = require("../../brand/entities/brand.entity");
+const comment_entity_1 = require("../../comment/entities/comment.entity");
 let Product = class Product {
     constructor(product) {
         Object.assign(this, product);
@@ -63,6 +64,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => product_attribute_entity_1.ProductAttribute, (productAttribute) => productAttribute.product),
     __metadata("design:type", Array)
 ], Product.prototype, "attributes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => comment_entity_1.Comment, (c) => c.product),
+    __metadata("design:type", Array)
+], Product.prototype, "comments", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

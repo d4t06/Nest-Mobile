@@ -16,10 +16,12 @@ class CreateProductAttributeDto {
 exports.CreateProductAttributeDto = CreateProductAttributeDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'product_id is required' }),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateProductAttributeDto.prototype, "product_id", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'category_attribute_id is required' }),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateProductAttributeDto.prototype, "category_attribute_id", void 0);
 //# sourceMappingURL=create.product-attribute.dto.js.map

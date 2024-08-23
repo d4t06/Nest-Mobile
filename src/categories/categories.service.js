@@ -32,9 +32,15 @@ let CategoriesService = class CategoriesService {
         return categories;
     }
     async create(categoryDto) {
+        const founded = await this.categoryRepository.findOne({
+            where: {
+                category_name_ascii: categoryDto.category_name_ascii,
+            },
+        });
+        if (founded)
+            throw new common_1.ConflictException('');
         const category = new category_entity_1.Category(categoryDto);
-        const newCategory = await this.entityManager.save(category);
-        return newCategory;
+        return await this.entityManager.save(category);
     }
     async update(updateDto, id) {
         await this.categoryRepository.update(id, updateDto);

@@ -22,8 +22,14 @@ let BrandService = class BrandService {
         this.brandRepository = brandRepository;
     }
     async create(body) {
-        const brand = new brand_entity_1.Brand(body);
-        this.brandRepository.save(brand);
+        const founded = await this.brandRepository.findOne({
+            where: {
+                brand_name_ascii: body.brand_name_ascii,
+            },
+        });
+        if (founded)
+            throw new common_1.ConflictException('');
+        this.brandRepository.save(body);
     }
     async update(id, body) {
         const brand = await this.brandRepository.findOne({ where: { id } });

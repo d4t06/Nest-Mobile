@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
 export declare class AuthController {
     private readonly authService;
@@ -13,8 +13,5 @@ export declare class AuthController {
         };
     }>;
     register(createDto: CreateUserDto): Promise<string>;
-    refresh(request: Request): Promise<{
-        token: string;
-    }>;
     findAll(): string;
 }

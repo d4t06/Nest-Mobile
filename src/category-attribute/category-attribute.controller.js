@@ -18,6 +18,9 @@ const category_attribute_service_1 = require("./category-attribute.service");
 const create_category_attribute_dto_1 = require("./dto/create.category-attribute.dto");
 const update_category_attribute_dto_1 = require("./dto/update.category-attribute.dto");
 const auth_guard_1 = require("../auth/guards/auth.guard");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const role_enum_1 = require("../auth/decorators/role.enum");
+const roles_guard_1 = require("../auth/guards/roles.guard");
 let CategoryAttributeController = class CategoryAttributeController {
     constructor(categoryAttributeService) {
         this.categoryAttributeService = categoryAttributeService;
@@ -35,7 +38,7 @@ let CategoryAttributeController = class CategoryAttributeController {
 exports.CategoryAttributeController = CategoryAttributeController;
 __decorate([
     (0, common_1.Post)(''),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_category_attribute_dto_1.CreateCategoryAttributeDto]),
@@ -43,7 +46,7 @@ __decorate([
 ], CategoryAttributeController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -52,7 +55,7 @@ __decorate([
 ], CategoryAttributeController.prototype, "updateAttribute", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -60,6 +63,7 @@ __decorate([
 ], CategoryAttributeController.prototype, "deleteAttribute", null);
 exports.CategoryAttributeController = CategoryAttributeController = __decorate([
     (0, common_1.Controller)('category-attributes'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     __metadata("design:paramtypes", [category_attribute_service_1.CategoryAttributeService])
 ], CategoryAttributeController);
 //# sourceMappingURL=category-attribute.controller.js.map

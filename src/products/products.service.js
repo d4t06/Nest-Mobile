@@ -29,8 +29,8 @@ let ProductsService = class ProductsService {
     async findAll(page, category_id) {
         const where = {};
         console.log('get products');
-        if (category_id) {
-            where.category_id = category_id;
+        if (category_id && !isNaN(+category_id)) {
+            where.category_id = +category_id;
         }
         const [products, count] = await this.productRepository.findAndCount({
             take: PAGE_SIZE,
@@ -71,6 +71,11 @@ let ProductsService = class ProductsService {
         return [];
     }
     async create(createProductDto) {
+        const foundedProduct = await this.productRepository.findOne({
+            where: { product_name_ascii: createProductDto.product_name_ascii },
+        });
+        if (foundedProduct)
+            throw new common_1.ConflictException("Product name had taken");
         const item = new product_entity_1.Product(createProductDto);
         const newProduct = await this.entityManager.save(item);
         const description = new description_entity_1.Description({

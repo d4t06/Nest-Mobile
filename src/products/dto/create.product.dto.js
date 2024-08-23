@@ -24,10 +24,12 @@ __decorate([
 ], CreateProductDto.prototype, "product_name_ascii", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'category_id is required' }),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "category_id", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'brand_id is required' }),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "brand_id", void 0);
 //# sourceMappingURL=create.product.dto.js.map

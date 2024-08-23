@@ -17,6 +17,9 @@ const common_1 = require("@nestjs/common");
 const brand_service_1 = require("./brand.service");
 const create_brand_dto_1 = require("./dto/create-brand-dto");
 const auth_guard_1 = require("../auth/guards/auth.guard");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
+const role_enum_1 = require("../auth/decorators/role.enum");
+const roles_guard_1 = require("../auth/guards/roles.guard");
 let BrandController = class BrandController {
     constructor(brandService) {
         this.brandService = brandService;
@@ -34,7 +37,7 @@ let BrandController = class BrandController {
 exports.BrandController = BrandController;
 __decorate([
     (0, common_1.Post)(),
-    (0, common_1.UseGuards)(),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     (0, common_1.UsePipes)(common_1.ValidationPipe),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -43,7 +46,7 @@ __decorate([
 ], BrandController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -52,7 +55,7 @@ __decorate([
 ], BrandController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -60,6 +63,7 @@ __decorate([
 ], BrandController.prototype, "delete", null);
 exports.BrandController = BrandController = __decorate([
     (0, common_1.Controller)('brands'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     __metadata("design:paramtypes", [brand_service_1.BrandService])
 ], BrandController);
 //# sourceMappingURL=brand.controller.js.map

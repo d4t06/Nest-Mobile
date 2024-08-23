@@ -25,6 +25,7 @@ const description_module_1 = require("./description/description.module");
 const greeting_controller_1 = require("./greeting/greeting.controller");
 const product_attribute_module_1 = require("./product-attribute/product-attribute.module");
 const category_attribute_module_1 = require("./category-attribute/category-attribute.module");
+const comment_module_1 = require("./comment/comment.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -52,6 +53,7 @@ exports.AppModule = AppModule = __decorate([
             description_module_1.DescriptionModule,
             product_attribute_module_1.ProductAttributeModule,
             category_attribute_module_1.CategoryAttributeModule,
+            comment_module_1.CommentModule,
         ],
         providers: [app_service_1.AppService, { provide: core_1.APP_GUARD, useClass: throttler_1.ThrottlerGuard }],
     })
