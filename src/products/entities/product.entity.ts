@@ -12,6 +12,7 @@ import {
 import { Description } from '@/description/entities/description.entity';
 import { ProductAttribute } from '@/product-attribute/entities/product-attribute.entity';
 import { Brand } from '@/brand/entities/brand.entity';
+import { Comment } from '@/comment/entities/comment.entity';
 
 @Entity({ name: 'Products' })
 export class Product {
@@ -53,7 +54,7 @@ export class Product {
   // this is the fk column name
   // must matches column name above
   @JoinColumn({ name: 'brand_id' })
-  // this is the alias column name
+  // this is the alias column names
   brand: Brand;
 
   // ***
@@ -62,6 +63,10 @@ export class Product {
     (productAttribute) => productAttribute.product,
   )
   attributes: ProductAttribute[];
+
+  // ***
+  @OneToMany(() => Comment, (c) => c.product)
+  comments: Comment[];
 
   @CreateDateColumn()
   created_at: Date;

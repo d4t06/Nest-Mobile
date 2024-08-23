@@ -16,6 +16,7 @@ import { DescriptionModule } from './description/description.module';
 import { GreetingController } from './greeting/greeting.controller';
 import { ProductAttributeModule } from './product-attribute/product-attribute.module';
 import { CategoryAttributeModule } from './category-attribute/category-attribute.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   controllers: [AppController, InitController, GreetingController],
@@ -41,6 +42,7 @@ import { CategoryAttributeModule } from './category-attribute/category-attribute
     DescriptionModule,
     ProductAttributeModule,
     CategoryAttributeModule,
+    CommentModule,
   ],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
