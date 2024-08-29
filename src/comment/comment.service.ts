@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, In, Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from './dto/create.comment.dto';
-import { date_diff } from 'utils/apphelper';
+import { date_diff } from '@/utils/apphelper';
 
 const PAGE_SIZE = +process.env.PAGE_SIZE || 12;
 

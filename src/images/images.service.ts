@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
-import { generateId } from 'utils/apphelper';
+import { generateId } from '@/utils/apphelper';
 import { CloudinaryService } from './cloudinary.service';
 import { Image } from './entities/image.entity';
 import { InjectRepository } from '@nestjs/typeorm';

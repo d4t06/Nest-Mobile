@@ -28,10 +28,11 @@ export class ProductsController {
   // GET /products
   @Get()
   findAll(
-    @Query('page', ParseIntPipe) page: number,
+    @Query('page') page: number = 1,
     @Query('category_id') category_id: string,
+    @Query('brand_id') brand_id: string,
   ) {
-    return this.productService.findAll(page, category_id);
+    return this.productService.findAll(page, category_id, brand_id);
   }
 
   // GET /products
@@ -51,7 +52,7 @@ export class ProductsController {
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @UsePipes(ValidationPipe)
-  async create( @Body() product: CreateProductDto) {
+  async create(@Body() product: CreateProductDto) {
     const newProduct = await this.productService.create(product);
     return newProduct;
   }

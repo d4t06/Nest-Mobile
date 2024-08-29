@@ -1,13 +1,17 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateProductDto } from './dto/update.product.dto';
 import { CreateProductDto } from './dto/create.product.dto';
 import { EntityManager, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Description } from '@/description/entities/description.entity';
-import { generateId } from 'utils/apphelper';
+import { generateId } from '@/utils/apphelper';
 
-const PAGE_SIZE = +process.env.PAGE_SIZE || 6;
+const PAGE_SIZE = +process.env.PAGE_SIZE || 1;
 
 @Injectable()
 export class ProductsService {
@@ -21,13 +25,16 @@ export class ProductsService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async findAll(page: number, category_id: string) {
+  async findAll(page: number, category_id: string, brand_id: string) {
     const where: FindOptionsWhere<Product> = {};
+
     console.log('get products');
 
     if (category_id && !isNaN(+category_id)) {
       where.category_id = +category_id;
     }
+
+    if (brand_id && !isNaN(+brand_id)) where.brand_id = +brand_id;
 
     const [products, count] = await this.productRepository.findAndCount({
       take: PAGE_SIZE,
@@ -47,7 +54,8 @@ export class ProductsService {
     return {
       count,
       page,
-      category_id: category_id || null,
+      category_id: +category_id || null,
+      brand_id: +brand_id || null,
       page_size: PAGE_SIZE,
       products,
     };
@@ -83,7 +91,7 @@ export class ProductsService {
       where: { product_name_ascii: createProductDto.product_name_ascii },
     });
 
-    if (foundedProduct) throw new ConflictException("Product name had taken")
+    if (foundedProduct) throw new ConflictException('Product name had taken');
 
     const item = new Product(createProductDto);
     const newProduct = await this.entityManager.save(item);
