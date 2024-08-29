@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImagesService = void 0;
 const common_1 = require("@nestjs/common");
-const apphelper_1 = require("../../utils/apphelper");
+const apphelper_1 = require("../utils/apphelper");
 const cloudinary_service_1 = require("./cloudinary.service");
 const image_entity_1 = require("./entities/image.entity");
 const typeorm_1 = require("@nestjs/typeorm");

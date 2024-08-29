@@ -5,10 +5,11 @@ import { Product } from './entities/product.entity';
 export declare class ProductsController {
     private readonly productService;
     constructor(productService: ProductsService);
-    findAll(page: number, category_id: string): Promise<{
+    findAll(page: number, category_id: string, brand_id: string): Promise<{
         count: number;
         page: number;
-        category_id: string;
+        category_id: number;
+        brand_id: number;
         page_size: number;
         products: Product[];
     }>;

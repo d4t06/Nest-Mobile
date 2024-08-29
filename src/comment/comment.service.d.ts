@@ -18,7 +18,7 @@ export declare class CommentService {
         product_id: number;
         approved: number;
     }>;
-    add(createDto: CreateCommentDto): Promise<CreateCommentDto & Comment>;
+    add(createDto: CreateCommentDto): Promise<Comment>;
     approve(id_list: number[]): Promise<import("typeorm").UpdateResult>;
     delete(id: number): Promise<import("typeorm").DeleteResult>;
 }

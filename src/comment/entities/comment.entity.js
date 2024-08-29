@@ -13,6 +13,9 @@ exports.Comment = void 0;
 const product_entity_1 = require("../../products/entities/product.entity");
 const typeorm_1 = require("typeorm");
 let Comment = class Comment {
+    constructor(item) {
+        Object.assign(this, item);
+    }
 };
 exports.Comment = Comment;
 __decorate([
@@ -52,6 +55,7 @@ __decorate([
     __metadata("design:type", Date)
 ], Comment.prototype, "created_at", void 0);
 exports.Comment = Comment = __decorate([
-    (0, typeorm_1.Entity)({ name: 'Comments' })
+    (0, typeorm_1.Entity)({ name: 'Comments' }),
+    __metadata("design:paramtypes", [Object])
 ], Comment);
 //# sourceMappingURL=comment.entity.js.map

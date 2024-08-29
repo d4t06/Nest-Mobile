@@ -1,4 +1,4 @@
-import { Category } from 'src/categories/entities/category.entity';
+import { Category } from '@/categories/entities/category.entity';
 import { Description } from '@/description/entities/description.entity';
 import { ProductAttribute } from '@/product-attribute/entities/product-attribute.entity';
 import { Brand } from '@/brand/entities/brand.entity';

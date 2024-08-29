@@ -18,20 +18,22 @@ const typeorm_1 = require("typeorm");
 const product_entity_1 = require("./entities/product.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const description_entity_1 = require("../description/entities/description.entity");
-const apphelper_1 = require("../../utils/apphelper");
-const PAGE_SIZE = +process.env.PAGE_SIZE || 6;
+const apphelper_1 = require("../utils/apphelper");
+const PAGE_SIZE = +process.env.PAGE_SIZE || 1;
 let ProductsService = class ProductsService {
     constructor(productRepository, descriptionRepository, entityManager) {
         this.productRepository = productRepository;
         this.descriptionRepository = descriptionRepository;
         this.entityManager = entityManager;
     }
-    async findAll(page, category_id) {
+    async findAll(page, category_id, brand_id) {
         const where = {};
         console.log('get products');
         if (category_id && !isNaN(+category_id)) {
             where.category_id = +category_id;
         }
+        if (brand_id && !isNaN(+brand_id))
+            where.brand_id = +brand_id;
         const [products, count] = await this.productRepository.findAndCount({
             take: PAGE_SIZE,
             skip: (page - 1) * PAGE_SIZE,
@@ -43,7 +45,8 @@ let ProductsService = class ProductsService {
         return {
             count,
             page,
-            category_id: category_id || null,
+            category_id: +category_id || null,
+            brand_id: +brand_id || null,
             page_size: PAGE_SIZE,
             products,
         };
@@ -75,7 +78,7 @@ let ProductsService = class ProductsService {
             where: { product_name_ascii: createProductDto.product_name_ascii },
         });
         if (foundedProduct)
-            throw new common_1.ConflictException("Product name had taken");
+            throw new common_1.ConflictException('Product name had taken');
         const item = new product_entity_1.Product(createProductDto);
         const newProduct = await this.entityManager.save(item);
         const description = new description_entity_1.Description({

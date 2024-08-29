@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const comment_entity_1 = require("./entities/comment.entity");
-const apphelper_1 = require("../../utils/apphelper");
+const apphelper_1 = require("../utils/apphelper");
 const PAGE_SIZE = +process.env.PAGE_SIZE || 12;
 let CommentService = class CommentService {
     constructor(commentRepository) {
@@ -74,7 +74,12 @@ let CommentService = class CommentService {
         };
     }
     async add(createDto) {
-        const newComment = await this.commentRepository.save(createDto);
+        const comment = new comment_entity_1.Comment({
+            ...createDto,
+            approved: false,
+            date_diff: '',
+        });
+        const newComment = await this.commentRepository.save(comment);
         return newComment;
     }
     async approve(id_list) {

@@ -8,10 +8,11 @@ export declare class ProductsService {
     private readonly descriptionRepository;
     private readonly entityManager;
     constructor(productRepository: Repository<Product>, descriptionRepository: Repository<Description>, entityManager: EntityManager);
-    findAll(page: number, category_id: string): Promise<{
+    findAll(page: number, category_id: string, brand_id: string): Promise<{
         count: number;
         page: number;
-        category_id: string;
+        category_id: number;
+        brand_id: number;
         page_size: number;
         products: Product[];
     }>;

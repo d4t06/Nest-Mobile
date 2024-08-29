@@ -8,4 +8,5 @@ export declare class Comment {
     product_id: number;
     product: Product;
     created_at: Date;
+    constructor(item: Partial<Comment>);
 }

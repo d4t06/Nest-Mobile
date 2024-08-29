@@ -11,7 +11,7 @@ export declare class CommentController {
         product_id: number;
         approved: number;
     }>;
-    add(dto: CreateCommentDto): Promise<CreateCommentDto & import("./entities/comment.entity").Comment>;
+    add(dto: CreateCommentDto): Promise<import("./entities/comment.entity").Comment>;
     approve(data: {
         id_list: number[];
     }): Promise<import("typeorm").UpdateResult>;
