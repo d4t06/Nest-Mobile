@@ -16,10 +16,9 @@ export class CategoryAttributeService {
     const founded = await this.categoryAttributeRepository.findOne({
       where: {
         attribute_name_ascii: categoryAttributeDto.attribute_name_ascii,
+        category_id: categoryAttributeDto.category_id,
       },
     });
-
-    console.log('check ', founded);
 
     if (founded) throw new ConflictException('');
 
