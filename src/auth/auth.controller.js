@@ -27,8 +27,8 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    signIn(signInDto, response) {
-        return this.authService.signIn(signInDto.username, signInDto.password, response);
+    signIn(signInDto) {
+        return this.authService.signIn(signInDto.username, signInDto.password);
     }
     register(createDto) {
         return this.authService.register(createDto);
@@ -42,9 +42,8 @@ __decorate([
     (0, common_1.Post)('/login'),
     (0, common_1.UseInterceptors)(login_interceptor_1.LoggingInterceptor, error_interceptor_1.ErrorInterceptor),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [sign_in_dto_1.SignInDto, Object]),
+    __metadata("design:paramtypes", [sign_in_dto_1.SignInDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "signIn", null);
 __decorate([

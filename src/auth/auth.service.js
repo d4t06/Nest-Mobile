@@ -18,7 +18,7 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async signIn(username, pass, response) {
+    async signIn(username, pass) {
         const foundedUser = await this.userService.findOne(username);
         if (!foundedUser || foundedUser.password !== pass) {
             throw new common_1.UnauthorizedException();

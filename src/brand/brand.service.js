@@ -25,6 +25,7 @@ let BrandService = class BrandService {
         const founded = await this.brandRepository.findOne({
             where: {
                 brand_name_ascii: body.brand_name_ascii,
+                category_id: body.category_id,
             },
         });
         if (founded)
