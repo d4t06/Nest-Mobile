@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Res,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -12,14 +11,12 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthGuard } from './guards/auth.guard';
-import { Response } from 'express';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from './decorators/role.enum';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { LoggingInterceptor } from './interceptors/login.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { Validator } from 'class-validator';
 
 // class
 @Controller('auth')
@@ -32,13 +29,9 @@ export class AuthController {
   @UseInterceptors(LoggingInterceptor, ErrorInterceptor)
   signIn(
     @Body() signInDto: SignInDto,
-    @Res({ passthrough: true }) response: Response,
+    //  @Res({ passthrough: true }) response: Response,
   ) {
-    return this.authService.signIn(
-      signInDto.username,
-      signInDto.password,
-      response,
-    );
+    return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @Post('/register')

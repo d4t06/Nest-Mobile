@@ -19,6 +19,7 @@ export class BrandService {
     const founded = await this.brandRepository.findOne({
       where: {
         brand_name_ascii: body.brand_name_ascii,
+        category_id: body.category_id,
       },
     });
 
@@ -31,7 +32,7 @@ export class BrandService {
     const brand = await this.brandRepository.findOne({ where: { id } });
 
     if (!brand) throw new NotFoundException();
-    this.brandRepository.update(id, brand);
+    this.brandRepository.update(id, body);
   }
 
   async delete(id: number) {
