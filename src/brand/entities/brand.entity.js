@@ -27,7 +27,7 @@ __decorate([
     __metadata("design:type", String)
 ], Brand.prototype, "brand_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Brand.prototype, "brand_name_ascii", void 0);
 __decorate([
@@ -48,6 +48,7 @@ __decorate([
 ], Brand.prototype, "category", void 0);
 exports.Brand = Brand = __decorate([
     (0, typeorm_1.Entity)({ name: 'Brands' }),
+    (0, typeorm_1.Unique)('check_unique_brand', ['category_id', 'brand_name_ascii']),
     __metadata("design:paramtypes", [Object])
 ], Brand);
 //# sourceMappingURL=brand.entity.js.map

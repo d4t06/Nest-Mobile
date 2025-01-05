@@ -36,7 +36,7 @@ let BrandService = class BrandService {
         const brand = await this.brandRepository.findOne({ where: { id } });
         if (!brand)
             throw new common_1.NotFoundException();
-        this.brandRepository.update(id, brand);
+        this.brandRepository.update(id, body);
     }
     async delete(id) {
         const brand = await this.brandRepository.findOne({ where: { id } });
