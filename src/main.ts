@@ -5,12 +5,19 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     credentials: true,
-    origin: ['http://localhost:3000', 'https://next-mobile-ebon.vercel.app'],
+    origin: [
+      'http://localhost:3000',
+      'https://next-mobile-ebon.vercel.app',
+      'https://nuxt-mobile.netlify.app',
+    ],
   });
 
   app.setGlobalPrefix('api');
-  await app.listen(process.env.PORT || 4000, () => {
-    console.log(`App running on port:${process.env.PORT}`);
+
+  const PORT = process.env.PORT || 4000;
+
+  await app.listen(PORT, () => {
+    console.log(`App running on port:${PORT}`);
   });
 }
 bootstrap();

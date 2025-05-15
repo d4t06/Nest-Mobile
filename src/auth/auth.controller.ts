@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -11,9 +12,9 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthGuard } from './guards/auth.guard';
-import { RolesGuard } from './guards/roles.guard';
-import { Roles } from './decorators/roles.decorator';
-import { Role } from './decorators/role.enum';
+// import { RolesGuard } from './guards/roles.guard';
+// import { Roles } from './decorators/roles.decorator';
+// import { Role } from './decorators/role.enum';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { LoggingInterceptor } from './interceptors/login.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
@@ -40,16 +41,14 @@ export class AuthController {
     return this.authService.register(createDto);
   }
 
-  // @Get('/refresh')
-  // refresh(@Req() request: Request) {
-  //   return this.authService.refreshToken(request);
-  // }
+  @Post('/refresh')
+  refresh(@Req() request: Request) {
+    return this.authService.refreshToken(request);
+  }
 
-  @Get('/users')
-  // @Throttle({ default: { limit: 2, ttl: 60000 } })
-  @Roles(Role.User)
-  @UseGuards(AuthGuard, RolesGuard)
-  findAll() {
-    return 'this route find all user';
+  @Get('/user-info')
+  @UseGuards(AuthGuard)
+  findAll(@Req() request: Request) {
+    return request['user'];
   }
 }

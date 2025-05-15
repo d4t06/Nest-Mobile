@@ -2,11 +2,12 @@ import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { UsersService } from '@/users/users.service';
 import {
   ForbiddenException,
+  // ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+// import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -22,16 +23,25 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const newToken = await this.jwtService.signAsync(
+    const authToken = await this.jwtService.signAsync(
       {
         username: username,
         role: foundedUser.role,
       },
-      { expiresIn: '2d' },
+      { expiresIn: '1h', secret: process.env.JWT_SECRET },
+    );
+
+    const refreshToken = await this.jwtService.signAsync(
+      {
+        username: username,
+        role: foundedUser.role,
+      },
+      { expiresIn: '30d', secret: process.env.JWT_SECRET },
     );
 
     return {
-      token: newToken,
+      token: authToken,
+      refresh_token: refreshToken,
       user: {
         name: username,
         role: foundedUser.role,
@@ -43,33 +53,31 @@ export class AuthService {
     return await this.userService.addOne(createUserDto);
   }
 
-  // async refreshToken(request: Request) {
-  //   const cookies = request.cookies;
-  //   const refreshToken = cookies.jwt;
+  async refreshToken(request: Request) {
+    const refreshToken = request.body['refresh_token'];
 
-  //   if (!refreshToken) throw new UnauthorizedException();
+    if (!refreshToken) throw new UnauthorizedException();
 
-  //   try {
-  //     const payload = await this.jwtService.verifyAsync(refreshToken, {
-  //       secret: process.env.JWT_SECRET,
-  //     });
-  //     const { username, role } = payload;
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: process.env.JWT_SECRET,
+      });
+      const { username, role } = payload;
 
-  //     const foundedUser = await this.userService.findOne(username);
-  //     if (!foundedUser) throw new UnauthorizedException();
+      const foundedUser = await this.userService.findOne(username);
+      if (!foundedUser) throw new UnauthorizedException();
 
-  //     const newToken = await this.jwtService.signAsync(
-  //       { username, role },
-  //       {
-  //         secret: process.env.JWT_SECRET,
-  //       },
-  //     );
+      const newToken = await this.jwtService.signAsync(
+        { username, role },
+        {
+          secret: process.env.JWT_SECRET,
+          expiresIn: '1h',
+        },
+      );
 
-  //     console.log('refresh check new token', newToken);
-
-  //     return { token: newToken };
-  //   } catch (error) {
-  //     throw new ForbiddenException();
-  //   }
-  // }
+      return { token: newToken };
+    } catch (error) {
+      throw new ForbiddenException();
+    }
+  }
 }
