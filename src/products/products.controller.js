@@ -25,7 +25,7 @@ let ProductsController = class ProductsController {
     constructor(productService) {
         this.productService = productService;
     }
-    findAll(page = 1, category_id, brand_id) {
+    findAll(page, category_id, brand_id) {
         return this.productService.findAll(page, category_id, brand_id);
     }
     search(q) {
@@ -53,7 +53,7 @@ __decorate([
     __param(1, (0, common_1.Query)('category_id')),
     __param(2, (0, common_1.Query)('brand_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, String]),
+    __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
 __decorate([

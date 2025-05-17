@@ -17,9 +17,6 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const sign_in_dto_1 = require("./dto/sign-in.dto");
 const auth_guard_1 = require("./guards/auth.guard");
-const roles_guard_1 = require("./guards/roles.guard");
-const roles_decorator_1 = require("./decorators/roles.decorator");
-const role_enum_1 = require("./decorators/role.enum");
 const create_user_dto_1 = require("../users/dto/create-user.dto");
 const login_interceptor_1 = require("./interceptors/login.interceptor");
 const error_interceptor_1 = require("./interceptors/error.interceptor");
@@ -33,8 +30,11 @@ let AuthController = class AuthController {
     register(createDto) {
         return this.authService.register(createDto);
     }
-    findAll() {
-        return 'this route find all user';
+    refresh(request) {
+        return this.authService.refreshToken(request);
+    }
+    findAll(request) {
+        return request['user'];
     }
 };
 exports.AuthController = AuthController;
@@ -55,11 +55,18 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "register", null);
 __decorate([
-    (0, common_1.Get)('/users'),
-    (0, roles_decorator_1.Roles)(role_enum_1.Role.User),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.Post)('/refresh'),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Request]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "refresh", null);
+__decorate([
+    (0, common_1.Get)('/user-info'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Request]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "findAll", null);
 exports.AuthController = AuthController = __decorate([

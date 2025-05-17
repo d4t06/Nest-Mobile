@@ -25,6 +25,7 @@ let AuthGuard = class AuthGuard {
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: process.env.JWT_SECRET,
             });
+            payload['token'] = token;
             request['user'] = payload;
             console.log('>>> inside auth guard payload', payload);
         }

@@ -7,10 +7,14 @@ export declare class AuthService {
     constructor(userService: UsersService, jwtService: JwtService);
     signIn(username: string, pass: string): Promise<{
         token: string;
+        refresh_token: string;
         user: {
             name: string;
             role: string;
         };
     }>;
     register(createUserDto: CreateUserDto): Promise<string>;
+    refreshToken(request: Request): Promise<{
+        token: string;
+    }>;
 }

@@ -19,7 +19,6 @@ const product_entity_1 = require("./entities/product.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const description_entity_1 = require("../description/entities/description.entity");
 const apphelper_1 = require("../utils/apphelper");
-const PAGE_SIZE = +process.env.PAGE_SIZE || 1;
 let ProductsService = class ProductsService {
     constructor(productRepository, descriptionRepository, entityManager) {
         this.productRepository = productRepository;
@@ -27,16 +26,16 @@ let ProductsService = class ProductsService {
         this.entityManager = entityManager;
     }
     async findAll(page, category_id, brand_id) {
+        const pageSize = +process.env.PAGE_SIZE || 1;
         const where = {};
-        console.log('get products');
-        if (category_id && !isNaN(+category_id)) {
+        if (category_id && +category_id)
             where.category_id = +category_id;
-        }
-        if (brand_id && !isNaN(+brand_id))
+        if (brand_id && +brand_id)
             where.brand_id = +brand_id;
+        const _page = page && +page ? +page : 1;
         const [products, count] = await this.productRepository.findAndCount({
-            take: PAGE_SIZE,
-            skip: (page - 1) * PAGE_SIZE,
+            take: pageSize,
+            skip: (_page - 1) * pageSize,
             order: {
                 id: 'DESC',
             },
@@ -44,10 +43,10 @@ let ProductsService = class ProductsService {
         });
         return {
             count,
-            page,
+            page: _page,
             category_id: +category_id || null,
             brand_id: +brand_id || null,
-            page_size: PAGE_SIZE,
+            page_size: pageSize,
             products,
         };
     }

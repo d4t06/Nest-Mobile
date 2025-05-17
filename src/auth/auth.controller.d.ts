@@ -6,11 +6,15 @@ export declare class AuthController {
     constructor(authService: AuthService);
     signIn(signInDto: SignInDto): Promise<{
         token: string;
+        refresh_token: string;
         user: {
             name: string;
             role: string;
         };
     }>;
     register(createDto: CreateUserDto): Promise<string>;
-    findAll(): string;
+    refresh(request: Request): Promise<{
+        token: string;
+    }>;
+    findAll(request: Request): any;
 }

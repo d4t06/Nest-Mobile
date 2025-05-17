@@ -23,12 +23,17 @@ let AuthService = class AuthService {
         if (!foundedUser || foundedUser.password !== pass) {
             throw new common_1.UnauthorizedException();
         }
-        const newToken = await this.jwtService.signAsync({
+        const authToken = await this.jwtService.signAsync({
             username: username,
             role: foundedUser.role,
-        }, { expiresIn: '2d' });
+        }, { expiresIn: '1h', secret: process.env.JWT_SECRET });
+        const refreshToken = await this.jwtService.signAsync({
+            username: username,
+            role: foundedUser.role,
+        }, { expiresIn: '30d', secret: process.env.JWT_SECRET });
         return {
-            token: newToken,
+            token: authToken,
+            refresh_token: refreshToken,
             user: {
                 name: username,
                 role: foundedUser.role,
@@ -37,6 +42,28 @@ let AuthService = class AuthService {
     }
     async register(createUserDto) {
         return await this.userService.addOne(createUserDto);
+    }
+    async refreshToken(request) {
+        const refreshToken = request.body['refresh_token'];
+        if (!refreshToken)
+            throw new common_1.UnauthorizedException();
+        try {
+            const payload = await this.jwtService.verifyAsync(refreshToken, {
+                secret: process.env.JWT_SECRET,
+            });
+            const { username, role } = payload;
+            const foundedUser = await this.userService.findOne(username);
+            if (!foundedUser)
+                throw new common_1.UnauthorizedException();
+            const newToken = await this.jwtService.signAsync({ username, role }, {
+                secret: process.env.JWT_SECRET,
+                expiresIn: '1h',
+            });
+            return { token: newToken };
+        }
+        catch (error) {
+            throw new common_1.ForbiddenException();
+        }
     }
 };
 exports.AuthService = AuthService;
