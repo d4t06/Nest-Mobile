@@ -26,7 +26,7 @@ let AuthService = class AuthService {
         const authToken = await this.jwtService.signAsync({
             username: username,
             role: foundedUser.role,
-        }, { expiresIn: '1h', secret: process.env.JWT_SECRET });
+        }, { expiresIn: '10s', secret: process.env.JWT_SECRET });
         const refreshToken = await this.jwtService.signAsync({
             username: username,
             role: foundedUser.role,
@@ -57,7 +57,7 @@ let AuthService = class AuthService {
                 throw new common_1.UnauthorizedException();
             const newToken = await this.jwtService.signAsync({ username, role }, {
                 secret: process.env.JWT_SECRET,
-                expiresIn: '1h',
+                expiresIn: '10s',
             });
             return { token: newToken };
         }

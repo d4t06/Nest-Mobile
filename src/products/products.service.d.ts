@@ -8,6 +8,7 @@ export declare class ProductsService {
     private readonly descriptionRepository;
     private readonly entityManager;
     constructor(productRepository: Repository<Product>, descriptionRepository: Repository<Description>, entityManager: EntityManager);
+    pageSize: number;
     findAll(page: number, category_id: string, brand_id: string): Promise<{
         count: number;
         page: number;

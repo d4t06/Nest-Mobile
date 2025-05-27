@@ -7,6 +7,7 @@ export declare class ImagesService {
     private readonly imageRepository;
     private readonly cloudinarySerive;
     constructor(imageRepository: Repository<Image>, cloudinarySerive: CloudinaryService);
+    PAGE_SIZE: number;
     create(file: Express.Multer.File): Promise<CreateImageDto & Image>;
     findAll(page: number): Promise<{
         page: number;

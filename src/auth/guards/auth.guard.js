@@ -27,7 +27,7 @@ let AuthGuard = class AuthGuard {
             });
             payload['token'] = token;
             request['user'] = payload;
-            console.log('>>> inside auth guard payload', payload);
+            console.log('>>> inside auth guard');
         }
         catch (error) {
             console.log('Auth guard, verify token fail');

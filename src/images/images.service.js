@@ -19,11 +19,11 @@ const cloudinary_service_1 = require("./cloudinary.service");
 const image_entity_1 = require("./entities/image.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const PAGE_SIZE = +process.env.PAGE_SIZE || 6;
 let ImagesService = class ImagesService {
     constructor(imageRepository, cloudinarySerive) {
         this.imageRepository = imageRepository;
         this.cloudinarySerive = cloudinarySerive;
+        this.PAGE_SIZE = +process.env.IMAGE_PAGE_SIZE || 6;
     }
     async create(file) {
         const uploadRes = await this.cloudinarySerive.uploadImage(file);
@@ -37,14 +37,15 @@ let ImagesService = class ImagesService {
         return newImage;
     }
     async findAll(page) {
+        const _page = page > 0 ? page : 1;
         const [images, count] = await this.imageRepository.findAndCount({
-            take: PAGE_SIZE,
-            skip: (page - 1) * PAGE_SIZE,
+            take: this.PAGE_SIZE,
+            skip: (_page - 1) * this.PAGE_SIZE,
             order: {
                 id: 'DESC',
             },
         });
-        return { page, page_size: PAGE_SIZE, count, images };
+        return { page, page_size: this.PAGE_SIZE, count, images };
     }
     async remove(public_id) {
         await this.imageRepository.delete({ public_id });

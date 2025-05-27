@@ -24,9 +24,9 @@ let ProductsService = class ProductsService {
         this.productRepository = productRepository;
         this.descriptionRepository = descriptionRepository;
         this.entityManager = entityManager;
+        this.pageSize = +process.env.PAGE_SIZE || 6;
     }
     async findAll(page, category_id, brand_id) {
-        const pageSize = +process.env.PAGE_SIZE || 1;
         const where = {};
         if (category_id && +category_id)
             where.category_id = +category_id;
@@ -34,8 +34,8 @@ let ProductsService = class ProductsService {
             where.brand_id = +brand_id;
         const _page = page && +page ? +page : 1;
         const [products, count] = await this.productRepository.findAndCount({
-            take: pageSize,
-            skip: (_page - 1) * pageSize,
+            take: this.pageSize,
+            skip: (_page - 1) * this.pageSize,
             order: {
                 id: 'DESC',
             },
@@ -46,7 +46,7 @@ let ProductsService = class ProductsService {
             page: _page,
             category_id: +category_id || null,
             brand_id: +brand_id || null,
-            page_size: pageSize,
+            page_size: this.pageSize,
             products,
         };
     }

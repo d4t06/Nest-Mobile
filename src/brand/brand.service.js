@@ -30,7 +30,7 @@ let BrandService = class BrandService {
         });
         if (founded)
             throw new common_1.ConflictException('');
-        this.brandRepository.save(body);
+        return await this.brandRepository.save(body);
     }
     async update(id, body) {
         const brand = await this.brandRepository.findOne({ where: { id } });
