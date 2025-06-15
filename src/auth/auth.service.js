@@ -20,7 +20,7 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async signIn(username, pass) {
+    async signIn(username, pass, res) {
         const foundedUser = await this.userService.findOne(username);
         if (!foundedUser || foundedUser.password !== pass) {
             throw new common_1.UnauthorizedException();
@@ -33,11 +33,15 @@ let AuthService = class AuthService {
             username: username,
             role: foundedUser.role,
         }, { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET });
+        res.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 29,
+        });
         return {
             token: authToken,
             refresh_token: refreshToken,
             user: {
-                name: username,
+                username: username,
                 role: foundedUser.role,
             },
         };
@@ -45,27 +49,47 @@ let AuthService = class AuthService {
     async register(createUserDto) {
         return await this.userService.addOne(createUserDto);
     }
+    async refresh(refreshToken) {
+        const payload = await this.jwtService.verifyAsync(refreshToken, {
+            secret: process.env.JWT_SECRET,
+        });
+        const { username, role } = payload;
+        const foundedUser = await this.userService.findOne(username);
+        if (!foundedUser)
+            throw new common_1.UnauthorizedException();
+        const newToken = await this.jwtService.signAsync({ username, role }, {
+            secret: process.env.JWT_SECRET,
+            expiresIn: TOKEN_EXPIRES,
+        });
+        return { token: newToken, user: { username, role } };
+    }
     async refreshToken(request) {
         const refreshToken = request.body['refresh_token'];
         if (!refreshToken)
             throw new common_1.UnauthorizedException();
         try {
-            const payload = await this.jwtService.verifyAsync(refreshToken, {
-                secret: process.env.JWT_SECRET,
-            });
-            const { username, role } = payload;
-            const foundedUser = await this.userService.findOne(username);
-            if (!foundedUser)
-                throw new common_1.UnauthorizedException();
-            const newToken = await this.jwtService.signAsync({ username, role }, {
-                secret: process.env.JWT_SECRET,
-                expiresIn: TOKEN_EXPIRES,
-            });
-            return { token: newToken };
+            const payload = await this.refresh(refreshToken);
+            return payload;
         }
         catch (error) {
             throw new common_1.ForbiddenException();
         }
+    }
+    async refreshTokenWithCookie(req) {
+        const refreshToken = req.cookies?.refresh_token;
+        if (!refreshToken)
+            throw new common_1.UnauthorizedException();
+        try {
+            const payload = await this.refresh(refreshToken);
+            return payload;
+        }
+        catch (error) {
+            throw new common_1.ForbiddenException();
+        }
+    }
+    async logout(res) {
+        res.clearCookie('refresh_token');
+        return res.sendStatus(200);
     }
 };
 exports.AuthService = AuthService;

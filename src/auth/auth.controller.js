@@ -24,8 +24,8 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    signIn(signInDto) {
-        return this.authService.signIn(signInDto.username, signInDto.password);
+    signIn(signInDto, response) {
+        return this.authService.signIn(signInDto.username, signInDto.password, response);
     }
     register(createDto) {
         return this.authService.register(createDto);
@@ -33,8 +33,14 @@ let AuthController = class AuthController {
     refresh(request) {
         return this.authService.refreshToken(request);
     }
+    refreshWithCookie(request) {
+        return this.authService.refreshTokenWithCookie(request);
+    }
     findAll(request) {
         return request['user'];
+    }
+    logout(response) {
+        return this.authService.logout(response);
     }
 };
 exports.AuthController = AuthController;
@@ -42,8 +48,9 @@ __decorate([
     (0, common_1.Post)('/login'),
     (0, common_1.UseInterceptors)(login_interceptor_1.LoggingInterceptor, error_interceptor_1.ErrorInterceptor),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [sign_in_dto_1.SignInDto]),
+    __metadata("design:paramtypes", [sign_in_dto_1.SignInDto, Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "signIn", null);
 __decorate([
@@ -58,17 +65,31 @@ __decorate([
     (0, common_1.Post)('/refresh'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Request]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refresh", null);
+__decorate([
+    (0, common_1.Get)('/refresh'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "refreshWithCookie", null);
 __decorate([
     (0, common_1.Get)('/user-info'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Request]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('/logout'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "logout", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
