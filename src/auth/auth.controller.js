@@ -82,7 +82,7 @@ __decorate([
 ], AuthController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('/logout'),
-    __param(0, (0, common_1.Res)()),
+    __param(0, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
