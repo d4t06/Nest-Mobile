@@ -34,7 +34,6 @@ let AuthService = class AuthService {
             role: foundedUser.role,
         }, { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET });
         res.cookie('refresh_token', refreshToken, {
-            httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 29,
             sameSite: 'none',
             secure: true,
