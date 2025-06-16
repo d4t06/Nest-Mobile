@@ -38,7 +38,7 @@ let AuthService = class AuthService {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             domain: 'nest-mobile.vercel.app',
-            sameSite: 'lax',
+            sameSite: 'none',
             path: '/',
         });
         return {
