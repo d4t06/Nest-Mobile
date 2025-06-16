@@ -43,7 +43,7 @@ async function bootstrap() {
     app.use((0, cookie_parser_1.default)());
     app.setGlobalPrefix('api');
     const PORT = process.env.PORT || 4000;
-    await app.listen(PORT, '192.168.2.19', () => {
+    await app.listen(PORT, () => {
         console.log(`App running on port: ${PORT}, whiteList: ${whiteList}`);
     });
 }
