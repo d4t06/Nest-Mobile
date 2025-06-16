@@ -87,7 +87,9 @@ let AuthService = class AuthService {
         }
     }
     async logout(res) {
-        res.cookie('refresh_token', '');
+        res.cookie('refresh_token', '', {
+            maxAge: 1000,
+        });
         return res.sendStatus(200);
     }
 };
