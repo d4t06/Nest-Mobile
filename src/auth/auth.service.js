@@ -37,7 +37,7 @@ let AuthService = class AuthService {
             maxAge: 1000 * 60 * 60 * 24 * 29,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            domain: 'https://nest-mobile.vercel.app',
+            domain: 'nest-mobile.vercel.app',
             sameSite: 'lax',
             path: '/',
         });
