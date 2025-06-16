@@ -36,6 +36,8 @@ let AuthService = class AuthService {
         res.cookie('refresh_token', refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 29,
             httpOnly: true,
+            sameSite: 'lax',
+            secure: true,
         });
         return {
             token: authToken,
