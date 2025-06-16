@@ -33,12 +33,7 @@ let AuthService = class AuthService {
             username: username,
             role: foundedUser.role,
         }, { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET });
-        res.cookie('refresh_token', refreshToken, {
-            maxAge: 1000 * 60 * 60 * 24 * 29,
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-        });
-        res.cookie('test', 'test', {
+        res.cookie('test', '1', {
             maxAge: 1000 * 60 * 60 * 24 * 29,
             secure: process.env.NODE_ENV === 'production',
         });
@@ -81,11 +76,7 @@ let AuthService = class AuthService {
         }
     }
     async refreshTokenWithCookie(req) {
-        const refreshToken = req.cookies?.refresh_token;
-        if (!refreshToken)
-            throw new common_1.UnauthorizedException();
         try {
-            const payload = await this.refresh(refreshToken);
             return req.cookies;
         }
         catch (error) {
