@@ -38,6 +38,7 @@ let AuthService = class AuthService {
             sameSite: 'lax',
             secure: false,
             httpOnly: false,
+            domain: 'https://test-d4t06.surge.sh',
         });
         return {
             token: authToken,
