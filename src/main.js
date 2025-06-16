@@ -39,6 +39,7 @@ async function bootstrap() {
     app.enableCors({
         credentials: true,
         origin: [...whiteList],
+        exposedHeaders: ['Set-Cookie'],
     });
     app.use((0, cookie_parser_1.default)());
     app.setGlobalPrefix('api');
