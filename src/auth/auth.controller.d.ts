@@ -22,13 +22,7 @@ export declare class AuthController {
             role: any;
         };
     }>;
-    refreshWithCookie(request: Request): Promise<{
-        token: string;
-        user: {
-            username: any;
-            role: any;
-        };
-    }>;
+    refreshWithCookie(request: Request): Promise<Record<string, any>>;
     findAll(request: Request): any;
     logout(response: Response): Promise<Response<any, Record<string, any>>>;
 }

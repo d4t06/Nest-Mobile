@@ -13,7 +13,7 @@ exports.AuthService = void 0;
 const users_service_1 = require("../users/users.service");
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
-const TOKEN_EXPIRES = 60 * 30;
+const TOKEN_EXPIRES = '1h';
 const REFRESH_TOKEN_EXPIRES = '30d';
 let AuthService = class AuthService {
     constructor(userService, jwtService) {
@@ -36,8 +36,11 @@ let AuthService = class AuthService {
         res.cookie('refresh_token', refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 29,
             httpOnly: true,
-            sameSite: 'lax',
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
+        });
+        res.cookie('test', 'test', {
+            maxAge: 1000 * 60 * 60 * 24 * 29,
+            secure: process.env.NODE_ENV === 'production',
         });
         return {
             token: authToken,
@@ -83,7 +86,7 @@ let AuthService = class AuthService {
             throw new common_1.UnauthorizedException();
         try {
             const payload = await this.refresh(refreshToken);
-            return payload;
+            return req.cookies;
         }
         catch (error) {
             throw new common_1.ForbiddenException();
