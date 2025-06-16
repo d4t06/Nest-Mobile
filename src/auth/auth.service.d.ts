@@ -30,6 +30,12 @@ export declare class AuthService {
             role: any;
         };
     }>;
-    refreshTokenWithCookie(req: Request): Promise<Record<string, any>>;
+    refreshTokenWithCookie(req: Request): Promise<{
+        token: string;
+        user: {
+            username: any;
+            role: any;
+        };
+    }>;
     logout(res: Response): Promise<Response<any, Record<string, any>>>;
 }

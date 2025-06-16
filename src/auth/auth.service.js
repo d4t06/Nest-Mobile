@@ -33,7 +33,7 @@ let AuthService = class AuthService {
             username: username,
             role: foundedUser.role,
         }, { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET });
-        res.setHeader('Set-Cookie', 'refreshToken=asdasd; Secure; Partitioned;');
+        res.setHeader('Set-Cookie', `refresh_token=${refreshToken}; httpOnly; maxAge=${1000 * 60 * 60 * 24 * 29}; Secure; Partitioned;`);
         return {
             token: authToken,
             refresh_token: refreshToken,
@@ -73,8 +73,12 @@ let AuthService = class AuthService {
         }
     }
     async refreshTokenWithCookie(req) {
+        const refreshToken = req.cookies?.refresh_token;
+        if (!refreshToken)
+            throw new common_1.UnauthorizedException();
         try {
-            return req.cookies;
+            const payload = await this.refresh(refreshToken);
+            return payload;
         }
         catch (error) {
             throw new common_1.ForbiddenException();
