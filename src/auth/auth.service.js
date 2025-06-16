@@ -35,6 +35,9 @@ let AuthService = class AuthService {
         }, { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET });
         res.cookie('refresh_token', refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 29,
+            sameSite: 'lax',
+            secure: false,
+            httpOnly: false,
         });
         return {
             token: authToken,
@@ -87,9 +90,7 @@ let AuthService = class AuthService {
         }
     }
     async logout(res) {
-        res.cookie('refresh_token', '', {
-            maxAge: 1000,
-        });
+        res.clearCookie('refresh_token');
         return res.sendStatus(200);
     }
 };
