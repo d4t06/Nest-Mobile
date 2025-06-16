@@ -38,7 +38,7 @@ let AuthService = class AuthService {
             sameSite: 'lax',
             secure: false,
             httpOnly: false,
-            domain: 'https://test-d4t06.surge.sh',
+            domain: process.env.COOKIE_DOMAIN || '/',
         });
         return {
             token: authToken,
