@@ -11,8 +11,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Description } from '@/description/entities/description.entity';
 import { generateId } from '@/utils/apphelper';
 
-const PAGE_SIZE = +process.env.PAGE_SIZE || 1;
-
 @Injectable()
 export class ProductsService {
   constructor(
@@ -25,20 +23,21 @@ export class ProductsService {
     private readonly entityManager: EntityManager,
   ) {}
 
+
+  public pageSize = +process.env.PAGE_SIZE || 6;
+
   async findAll(page: number, category_id: string, brand_id: string) {
+
     const where: FindOptionsWhere<Product> = {};
 
-    console.log('get products');
+    if (category_id && +category_id) where.category_id = +category_id;
+    if (brand_id && +brand_id) where.brand_id = +brand_id;
 
-    if (category_id && !isNaN(+category_id)) {
-      where.category_id = +category_id;
-    }
-
-    if (brand_id && !isNaN(+brand_id)) where.brand_id = +brand_id;
+    const _page = page && +page ? +page : 1;
 
     const [products, count] = await this.productRepository.findAndCount({
-      take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
+      take: this.pageSize,
+      skip: (_page - 1) * this.pageSize,
       order: {
         id: 'DESC',
       },
@@ -53,10 +52,10 @@ export class ProductsService {
 
     return {
       count,
-      page,
+      page: _page,
       category_id: +category_id || null,
       brand_id: +brand_id || null,
-      page_size: PAGE_SIZE,
+      page_size: this.pageSize,
       products,
     };
   }

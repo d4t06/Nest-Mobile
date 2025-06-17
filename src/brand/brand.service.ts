@@ -25,7 +25,7 @@ export class BrandService {
 
     if (founded) throw new ConflictException('');
 
-    this.brandRepository.save(body);
+    return await this.brandRepository.save(body);
   }
 
   async update(id: number, body: CreateBrandDto) {

@@ -28,7 +28,7 @@ export class ProductsController {
   // GET /products
   @Get()
   findAll(
-    @Query('page') page: number = 1,
+    @Query('page') page,
     @Query('category_id') category_id: string,
     @Query('brand_id') brand_id: string,
   ) {

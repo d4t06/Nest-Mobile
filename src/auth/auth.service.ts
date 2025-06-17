@@ -2,12 +2,14 @@ import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { UsersService } from '@/users/users.service';
 import {
   ForbiddenException,
-  // ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-// import { Response } from 'express';
+import { Request, Response } from 'express';
+
+const TOKEN_EXPIRES = '1h';
+const REFRESH_TOKEN_EXPIRES = '30d';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signIn(username: string, pass: string) {
+  async signIn(username: string, pass: string, res: Response) {
     const foundedUser = await this.userService.findOne(username);
 
     if (!foundedUser || foundedUser.password !== pass) {
@@ -28,7 +30,7 @@ export class AuthService {
         username: username,
         role: foundedUser.role,
       },
-      { expiresIn: '1h', secret: process.env.JWT_SECRET },
+      { expiresIn: TOKEN_EXPIRES, secret: process.env.JWT_SECRET },
     );
 
     const refreshToken = await this.jwtService.signAsync(
@@ -36,14 +38,23 @@ export class AuthService {
         username: username,
         role: foundedUser.role,
       },
-      { expiresIn: '30d', secret: process.env.JWT_SECRET },
+      { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET },
     );
+
+    res.cookie('refresh_token', refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 29,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      domain: 'nest-mobile.vercel.app',
+      sameSite: 'none',
+      path: '/',
+    });
 
     return {
       token: authToken,
       refresh_token: refreshToken,
       user: {
-        name: username,
+        username: username,
         role: foundedUser.role,
       },
     };
@@ -53,31 +64,56 @@ export class AuthService {
     return await this.userService.addOne(createUserDto);
   }
 
+  async refresh(refreshToken: string) {
+    const payload = await this.jwtService.verifyAsync(refreshToken, {
+      secret: process.env.JWT_SECRET,
+    });
+    const { username, role } = payload;
+
+    const foundedUser = await this.userService.findOne(username);
+    if (!foundedUser) throw new UnauthorizedException();
+
+    const newToken = await this.jwtService.signAsync(
+      { username, role },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: TOKEN_EXPIRES,
+      },
+    );
+
+    return { token: newToken, user: { username, role } };
+  }
+
   async refreshToken(request: Request) {
     const refreshToken = request.body['refresh_token'];
 
     if (!refreshToken) throw new UnauthorizedException();
 
     try {
-      const payload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: process.env.JWT_SECRET,
-      });
-      const { username, role } = payload;
+      const payload = await this.refresh(refreshToken);
 
-      const foundedUser = await this.userService.findOne(username);
-      if (!foundedUser) throw new UnauthorizedException();
-
-      const newToken = await this.jwtService.signAsync(
-        { username, role },
-        {
-          secret: process.env.JWT_SECRET,
-          expiresIn: '1h',
-        },
-      );
-
-      return { token: newToken };
+      return payload;
     } catch (error) {
       throw new ForbiddenException();
     }
+  }
+
+  async refreshTokenWithCookie(req: Request) {
+    const refreshToken = req.cookies?.refresh_token;
+
+    if (!refreshToken) throw new UnauthorizedException();
+
+    try {
+      const payload = await this.refresh(refreshToken);
+
+      return payload;
+    } catch (error) {
+      throw new ForbiddenException();
+    }
+  }
+
+  async logout(res: Response) {
+    res.clearCookie('refresh_token');
+    return res.sendStatus(200);
   }
 }

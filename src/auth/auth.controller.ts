@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Req,
+  Res,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -12,12 +13,10 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthGuard } from './guards/auth.guard';
-// import { RolesGuard } from './guards/roles.guard';
-// import { Roles } from './decorators/roles.decorator';
-// import { Role } from './decorators/role.enum';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { LoggingInterceptor } from './interceptors/login.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { Request, Response } from 'express';
 
 // class
 @Controller('auth')
@@ -27,12 +26,16 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
-  @UseInterceptors(LoggingInterceptor, ErrorInterceptor)
+  // @UseInterceptors(LoggingInterceptor, ErrorInterceptor)
   signIn(
     @Body() signInDto: SignInDto,
-    //  @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) response: Response,
   ) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+    return this.authService.signIn(
+      signInDto.username,
+      signInDto.password,
+      response,
+    );
   }
 
   @Post('/register')
@@ -46,9 +49,19 @@ export class AuthController {
     return this.authService.refreshToken(request);
   }
 
+  @Get('/refresh')
+  refreshWithCookie(@Req() request: Request) {
+    return this.authService.refreshTokenWithCookie(request);
+  }
+
   @Get('/user-info')
   @UseGuards(AuthGuard)
   findAll(@Req() request: Request) {
     return request['user'];
+  }
+
+  @Get('/logout')
+  logout(@Res() response: Response) {
+    return this.authService.logout(response);
   }
 }
