@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
 // import { CreateImageDto } from './dto/create-image.dto';
-import { UpdateImageDto } from './dto/update-image.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { AuthGuard } from '@/auth/guards/auth.guard';
@@ -30,8 +29,12 @@ export class ImagesController {
       storage: memoryStorage(),
     }),
   )
-  create(@UploadedFile('file') file: Express.Multer.File) {
-    return this.imagesService.create(file);
+  create(
+    @UploadedFile('file') file: Express.Multer.File,
+    @Query('width') width?: number,
+    @Query('height') height?: number,
+  ) {
+    return this.imagesService.create(file, width, height);
   }
 
   @Get()

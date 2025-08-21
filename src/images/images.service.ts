@@ -17,15 +17,21 @@ export class ImagesService {
 
   public PAGE_SIZE = +process.env.IMAGE_PAGE_SIZE || 6;
 
-  async create(file: Express.Multer.File) {
-    const uploadRes = await this.cloudinarySerive.uploadImage(file);
+  async create(file: Express.Multer.File, width?: number, height?: number) {
+    const uploadRes = await this.cloudinarySerive.uploadImage(
+      file,
+      width,
+      height,
+    );
 
     const createImageDto: CreateImageDto = {
       image_url: uploadRes.secure_url,
       name: generateId(file.originalname),
       public_id: uploadRes.public_id,
-      size: Math.ceil(uploadRes.bytes / 1000),
+      size: Math.ceil(uploadRes.bytes / 1024),
     };
+
+    console.log(uploadRes)
 
     const newImage = await this.imageRepository.save(createImageDto);
     return newImage;

@@ -10,14 +10,25 @@ export class CloudinaryService {
     });
   }
 
-  async uploadImage(file: Express.Multer.File) {
+  async uploadImage(
+    file: Express.Multer.File,
+    width?: number,
+    height?: number,
+  ) {
     const { buffer, mimetype } = file;
 
-    const newImageBuffer = await sharp(buffer)
-      .resize({ height: 1080, fit: 'cover', withoutEnlargement: true })
-      .toBuffer();
+    const _height = height && !isNaN(+height) && +height >= 100 ? +height : 500;
+    const _width = width && !isNaN(+width) && +width >= 100 ? +width : 500;
 
-    // withoutEnlargement, max height is image height
+    const start = Date.now();
+
+    const newImageBuffer = await sharp(buffer)
+      .resize({
+        height: _height,
+        width: _width,
+        fit: 'cover',
+      })
+      .toBuffer();
 
     const b64 = Buffer.from(newImageBuffer).toString('base64');
     let dataURI = 'data:' + mimetype + ';base64,' + b64;
@@ -26,6 +37,12 @@ export class CloudinaryService {
       folder: 'mobile-wars',
       resource_type: 'auto',
     });
+
+    const finish = Date.now();
+
+    console.log(
+      `Upload image ${_width}x${_height} finished after, ${(finish - start) / 1000}`,
+    );
 
     return imageUploadRes;
   }
