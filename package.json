@@ -6,7 +6,24 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "start": "node src/main.js"
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/src/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "deploy": "gh-pages -d dist",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm:local": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d config/typeorm.config.ts",
+    "migration:generate": "npm run typeorm:local migration:generate migrations/test",
+    "migration:revert": "npm run typeorm:local migration:revert",
+    "migration:run": "npm run typeorm:local migration:run",
+    "db:drop": "npm run typeorm:local schema:drop"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -20,6 +37,7 @@
     "class-validator": "^0.14.1",
     "cloudinary": "^2.0.1",
     "cookie-parser": "^1.4.7",
+    "imagekit": "^6.0.0",
     "mysql2": "^3.9.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",

@@ -34,7 +34,6 @@ let UsersService = class UsersService {
                 username: user.username,
             },
         });
-        console.log(foundedUser);
         if (foundedUser)
             throw new common_1.ConflictException('Username had taken');
         await this.userRepository.save(user);

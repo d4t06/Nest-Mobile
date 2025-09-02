@@ -25,13 +25,13 @@ let ImagesService = class ImagesService {
         this.cloudinarySerive = cloudinarySerive;
         this.PAGE_SIZE = +process.env.IMAGE_PAGE_SIZE || 6;
     }
-    async create(file) {
-        const uploadRes = await this.cloudinarySerive.uploadImage(file);
+    async create(file, width) {
+        const uploadRes = await this.cloudinarySerive.uploadImage(file, width);
         const createImageDto = {
             image_url: uploadRes.secure_url,
             name: (0, apphelper_1.generateId)(file.originalname),
             public_id: uploadRes.public_id,
-            size: Math.ceil(uploadRes.bytes / 1000),
+            size: Math.ceil(uploadRes.bytes / 1024),
         };
         const newImage = await this.imageRepository.save(createImageDto);
         return newImage;

@@ -14,10 +14,15 @@ class CloudinaryService {
             api_secret: process.env.CLOUD_API_SECRET,
         });
     }
-    async uploadImage(file) {
+    async uploadImage(file, width) {
         const { buffer, mimetype } = file;
+        const _width = width && !isNaN(+width) && +width >= 100 ? +width : 500;
+        const start = Date.now();
         const newImageBuffer = await (0, sharp_1.default)(buffer)
-            .resize({ height: 1080, fit: 'cover', withoutEnlargement: true })
+            .resize({
+            width: _width,
+        })
+            .png({ quality: 80 })
             .toBuffer();
         const b64 = Buffer.from(newImageBuffer).toString('base64');
         let dataURI = 'data:' + mimetype + ';base64,' + b64;
@@ -25,6 +30,8 @@ class CloudinaryService {
             folder: 'mobile-wars',
             resource_type: 'auto',
         });
+        const finish = Date.now();
+        console.log(`Upload image ${_width} finished after, ${(finish - start) / 1000}`);
         return imageUploadRes;
     }
     async deleteImage(public_id) {

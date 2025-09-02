@@ -22,8 +22,8 @@ let ImagesController = class ImagesController {
     constructor(imagesService) {
         this.imagesService = imagesService;
     }
-    create(file) {
-        return this.imagesService.create(file);
+    create(file, width) {
+        return this.imagesService.create(file, width);
     }
     findAll(page) {
         return this.imagesService.findAll(page);
@@ -40,8 +40,9 @@ __decorate([
         storage: (0, multer_1.memoryStorage)(),
     })),
     __param(0, (0, common_1.UploadedFile)('file')),
+    __param(1, (0, common_1.Query)('width')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", void 0)
 ], ImagesController.prototype, "create", null);
 __decorate([
