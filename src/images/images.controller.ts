@@ -2,8 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
   Delete,
   UseInterceptors,
@@ -32,9 +30,8 @@ export class ImagesController {
   create(
     @UploadedFile('file') file: Express.Multer.File,
     @Query('width') width?: number,
-    @Query('height') height?: number,
   ) {
-    return this.imagesService.create(file, width, height);
+    return this.imagesService.create(file, width);
   }
 
   @Get()

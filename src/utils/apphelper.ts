@@ -22,7 +22,7 @@ export const date_diff = (createAt: Date) => {
     (1000 * 60 * 60)
   ).toFixed(1);
 
-  console.log(hourDiff);
+  // console.log(hourDiff);
 
   if (hourDiff / 24 > 30) return createAt.toLocaleDateString('en-gb');
 

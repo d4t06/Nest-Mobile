@@ -26,7 +26,7 @@ export class UsersService {
       },
     });
 
-    console.log(foundedUser);
+    // console.log(foundedUser);
   
 
     if (foundedUser) throw new ConflictException('Username had taken');

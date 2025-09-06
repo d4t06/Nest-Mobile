@@ -10,24 +10,18 @@ export class CloudinaryService {
     });
   }
 
-  async uploadImage(
-    file: Express.Multer.File,
-    width?: number,
-    height?: number,
-  ) {
+  async uploadImage(file: Express.Multer.File, width?: number) {
     const { buffer, mimetype } = file;
 
-    const _height = height && !isNaN(+height) && +height >= 100 ? +height : 500;
     const _width = width && !isNaN(+width) && +width >= 100 ? +width : 500;
 
     const start = Date.now();
 
     const newImageBuffer = await sharp(buffer)
       .resize({
-        height: _height,
         width: _width,
-        fit: 'cover',
       })
+      .png({ quality: 80 })
       .toBuffer();
 
     const b64 = Buffer.from(newImageBuffer).toString('base64');
@@ -41,7 +35,7 @@ export class CloudinaryService {
     const finish = Date.now();
 
     console.log(
-      `Upload image ${_width}x${_height} finished after, ${(finish - start) / 1000}`,
+      `Upload image ${_width} finished after, ${(finish - start) / 1000}`,
     );
 
     return imageUploadRes;
