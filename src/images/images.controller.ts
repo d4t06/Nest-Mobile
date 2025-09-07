@@ -41,7 +41,13 @@ export class ImagesController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  remove(@Param('id') id: string) {
+  delete(@Param('id') id: string) {
     return this.imagesService.remove(id);
+  }
+
+  @Delete('')
+  @UseGuards(AuthGuard)
+  deleteMany(@Query('images') images: string[]) {
+    return this.imagesService.removeMany(images);
   }
 }

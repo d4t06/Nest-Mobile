@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateImageDto } from './dto/create-image.dto';
 import { generateId } from '@/utils/apphelper';
 import { CloudinaryService } from './cloudinary.service';
@@ -18,10 +18,7 @@ export class ImagesService {
   public PAGE_SIZE = +process.env.IMAGE_PAGE_SIZE || 6;
 
   async create(file: Express.Multer.File, width?: number) {
-    const uploadRes = await this.cloudinarySerive.uploadImage(
-      file,
-      width,
-    );
+    const uploadRes = await this.cloudinarySerive.uploadImage(file, width);
 
     const createImageDto: CreateImageDto = {
       image_url: uploadRes.secure_url,
@@ -29,8 +26,6 @@ export class ImagesService {
       public_id: uploadRes.public_id,
       size: Math.ceil(uploadRes.bytes / 1024),
     };
-
-    // console.log(uploadRes)
 
     const newImage = await this.imageRepository.save(createImageDto);
     return newImage;
@@ -53,5 +48,25 @@ export class ImagesService {
   async remove(public_id: string) {
     await this.imageRepository.delete({ public_id });
     await this.cloudinarySerive.deleteImage(public_id);
+  }
+
+  async removeMany(images: string[]) {
+    if (!images.length) throw new BadRequestException();
+
+    const handleDeleteImage = async (src: string) => {
+      const founded = await this.imageRepository.findOne({
+        where: {
+          image_url: src,
+        },
+      });
+
+      if (founded) {
+        await this.remove(founded.public_id);
+      }
+    };
+
+    await Promise.all(images.map((src) => handleDeleteImage(src)));
+
+    return 'Delete image ok';
   }
 }
