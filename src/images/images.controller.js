@@ -28,8 +28,11 @@ let ImagesController = class ImagesController {
     findAll(page) {
         return this.imagesService.findAll(page);
     }
-    remove(id) {
+    delete(id) {
         return this.imagesService.remove(id);
+    }
+    deleteMany(images) {
+        return this.imagesService.removeMany(images);
     }
 };
 exports.ImagesController = ImagesController;
@@ -59,7 +62,15 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], ImagesController.prototype, "remove", null);
+], ImagesController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Delete)(''),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_1.Query)('images')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", void 0)
+], ImagesController.prototype, "deleteMany", null);
 exports.ImagesController = ImagesController = __decorate([
     (0, common_1.Controller)('images'),
     __metadata("design:paramtypes", [images_service_1.ImagesService])

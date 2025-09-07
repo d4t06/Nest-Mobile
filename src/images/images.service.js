@@ -51,6 +51,22 @@ let ImagesService = class ImagesService {
         await this.imageRepository.delete({ public_id });
         await this.cloudinarySerive.deleteImage(public_id);
     }
+    async removeMany(images) {
+        if (!images.length)
+            throw new common_1.BadRequestException();
+        const handleDeleteImage = async (src) => {
+            const founded = await this.imageRepository.findOne({
+                where: {
+                    image_url: src,
+                },
+            });
+            if (founded) {
+                await this.remove(founded.public_id);
+            }
+        };
+        await Promise.all(images.map((src) => handleDeleteImage(src)));
+        return 'Delete image ok';
+    }
 };
 exports.ImagesService = ImagesService;
 exports.ImagesService = ImagesService = __decorate([

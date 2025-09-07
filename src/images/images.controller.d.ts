@@ -10,5 +10,6 @@ export declare class ImagesController {
         count: number;
         images: import("./entities/image.entity").Image[];
     }>;
-    remove(id: string): Promise<void>;
+    delete(id: string): Promise<void>;
+    deleteMany(images: string[]): Promise<string>;
 }

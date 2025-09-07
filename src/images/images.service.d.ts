@@ -16,4 +16,5 @@ export declare class ImagesService {
         images: Image[];
     }>;
     remove(public_id: string): Promise<void>;
+    removeMany(images: string[]): Promise<string>;
 }
