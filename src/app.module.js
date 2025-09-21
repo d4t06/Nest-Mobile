@@ -27,6 +27,9 @@ const product_attribute_module_1 = require("./product-attribute/product-attribut
 const category_attribute_module_1 = require("./category-attribute/category-attribute.module");
 const comment_module_1 = require("./comment/comment.module");
 const image_module_1 = require("./image/image.module");
+const user_like_product_module_1 = require("./user-like-product/user-like-product.module");
+const tag_module_1 = require("./tag/tag.module");
+const product_tag_module_1 = require("./product-tag/product-tag.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -56,6 +59,9 @@ exports.AppModule = AppModule = __decorate([
             category_attribute_module_1.CategoryAttributeModule,
             comment_module_1.CommentModule,
             image_module_1.ImageModule,
+            user_like_product_module_1.UserLikeProductModule,
+            tag_module_1.TagModule,
+            product_tag_module_1.ProductTagModule,
         ],
         providers: [app_service_1.AppService, { provide: core_1.APP_GUARD, useClass: throttler_1.ThrottlerGuard }],
     })

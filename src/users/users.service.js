@@ -23,10 +23,10 @@ let UsersService = class UsersService {
         this.userRepository = userRepository;
     }
     async findOne(username) {
-        return await this.entityManager
-            .createQueryBuilder(user_entity_1.User, 'user')
-            .where('user.username = :username', { username })
-            .getOne();
+        return await this.userRepository.findOne({
+            where: { username },
+            relations: { like_products: true },
+        });
     }
     async addOne(user) {
         const foundedUser = await this.userRepository.findOne({

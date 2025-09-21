@@ -22,7 +22,7 @@ class CloudinaryService {
             .resize({
             width: _width,
         })
-            .png({ quality: 80 })
+            .png({ quality: 75 })
             .toBuffer();
         const b64 = Buffer.from(newImageBuffer).toString('base64');
         let dataURI = 'data:' + mimetype + ';base64,' + b64;

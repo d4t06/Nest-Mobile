@@ -19,10 +19,14 @@ const product_entity_1 = require("./entities/product.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const description_entity_1 = require("../description/entities/description.entity");
 const apphelper_1 = require("../utils/apphelper");
+const product_tag_entity_1 = require("../product-tag/entities/product-tag.entity");
+const user_like_product_entity_1 = require("../user-like-product/entities/user-like-product.entity");
 let ProductsService = class ProductsService {
-    constructor(productRepository, descriptionRepository, entityManager) {
+    constructor(productRepository, descriptionRepository, productTagRepository, userLikeProductRepository, entityManager) {
         this.productRepository = productRepository;
         this.descriptionRepository = descriptionRepository;
+        this.productTagRepository = productTagRepository;
+        this.userLikeProductRepository = userLikeProductRepository;
         this.entityManager = entityManager;
         this.pageSize = +process.env.PAGE_SIZE || 6;
     }
@@ -40,6 +44,11 @@ let ProductsService = class ProductsService {
                 id: 'DESC',
             },
             where,
+            relations: {
+                product_tags: {
+                    tag: true,
+                },
+            },
         });
         return {
             count,
@@ -50,12 +59,41 @@ let ProductsService = class ProductsService {
             products,
         };
     }
+    async findAllOfTag(page, tag_id) {
+        const where = {};
+        const _page = page && +page ? +page : 1;
+        if (tag_id && +tag_id)
+            where.tag_id = +tag_id;
+        else
+            throw new common_1.BadRequestException();
+        const [productTags, count] = await this.productTagRepository.findAndCount({
+            take: this.pageSize,
+            skip: (_page - 1) * this.pageSize,
+            where,
+            relations: {
+                product: {
+                    product_tags: {
+                        tag: true,
+                    },
+                },
+            },
+        });
+        return {
+            count,
+            page: _page,
+            page_size: this.pageSize,
+            products: productTags.map((pT) => pT.product),
+        };
+    }
     async findOne(productId) {
         const product = await this.productRepository.findOne({
             where: { id: productId },
             relations: {
                 attributes: true,
                 description: true,
+                product_tags: {
+                    tag: true,
+                },
             },
         });
         if (!product)
@@ -66,6 +104,11 @@ let ProductsService = class ProductsService {
         const products = await this.productRepository.find({
             where: {
                 product_name_ascii: (0, typeorm_1.Like)(`%${(0, apphelper_1.generateId)(q)}%`),
+            },
+            relations: {
+                product_tags: {
+                    tag: true,
+                },
             },
         });
         if (products.length)
@@ -88,7 +131,23 @@ let ProductsService = class ProductsService {
         return newProduct;
     }
     async update(updateDto, id) {
-        return await this.productRepository.update(id, updateDto);
+        await this.productRepository.update(id, updateDto);
+        return 'ok';
+    }
+    async addTag(data) {
+        return await this.productTagRepository.save(data);
+    }
+    async removeTag(data) {
+        this.productTagRepository.delete(data);
+        return 'ok';
+    }
+    async likeProduct(data) {
+        await this.userLikeProductRepository.save(data);
+        return 'ok';
+    }
+    async unlikeProduct(data) {
+        await this.userLikeProductRepository.delete(data);
+        return 'ok';
     }
     async delete(id) {
         const product = await this.productRepository.findOne({
@@ -96,7 +155,20 @@ let ProductsService = class ProductsService {
         });
         if (!product)
             throw new common_1.NotFoundException('product not found');
-        return await this.productRepository.delete({ id });
+        await this.productRepository.delete({ id });
+        return 'ok';
+    }
+    async getLikeProduct(user_id) {
+        return await this.userLikeProductRepository.find({
+            where: { user_id },
+            relations: {
+                product: {
+                    product_tags: {
+                        tag: true,
+                    },
+                },
+            },
+        });
     }
 };
 exports.ProductsService = ProductsService;
@@ -104,7 +176,11 @@ exports.ProductsService = ProductsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_2.InjectRepository)(product_entity_1.Product)),
     __param(1, (0, typeorm_2.InjectRepository)(description_entity_1.Description)),
+    __param(2, (0, typeorm_2.InjectRepository)(product_tag_entity_1.ProductTag)),
+    __param(3, (0, typeorm_2.InjectRepository)(user_like_product_entity_1.UserLikeProduct)),
     __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.Repository,
+        typeorm_1.Repository,
         typeorm_1.Repository,
         typeorm_1.EntityManager])
 ], ProductsService);

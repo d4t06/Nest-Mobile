@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+const user_like_product_entity_1 = require("../../user-like-product/entities/user-like-product.entity");
 const typeorm_1 = require("typeorm");
 let User = class User {
     constructor(user) {
@@ -41,6 +42,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => user_like_product_entity_1.UserLikeProduct, (model) => model.user, {
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+    }),
+    __metadata("design:type", Array)
+], User.prototype, "like_products", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)({ name: 'Users' }),
     __metadata("design:paramtypes", [Object])

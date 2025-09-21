@@ -12,6 +12,8 @@ export declare class AuthController {
         user: {
             username: string;
             role: string;
+            like_products: import("../user-like-product/entities/user-like-product.entity").UserLikeProduct[];
+            id: number;
         };
     }>;
     register(createDto: CreateUserDto): Promise<string>;

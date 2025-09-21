@@ -35,7 +35,9 @@ dotenv.config({
 });
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const whiteList = process.env?.WHITE_LIST?.split(', ') || [];
+    const whiteList = process.env?.WHITE_LIST?.split(', ') || [
+        'http://localhost:3000',
+    ];
     app.enableCors({
         credentials: true,
         origin: [...whiteList],

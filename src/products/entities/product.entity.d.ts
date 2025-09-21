@@ -3,6 +3,7 @@ import { Description } from '@/description/entities/description.entity';
 import { ProductAttribute } from '@/product-attribute/entities/product-attribute.entity';
 import { Brand } from '@/brand/entities/brand.entity';
 import { Comment } from '@/comment/entities/comment.entity';
+import { ProductTag } from '@/product-tag/entities/product-tag.entity';
 export declare class Product {
     id: number;
     product_name: string;
@@ -14,6 +15,7 @@ export declare class Product {
     brand: Brand;
     attributes: ProductAttribute[];
     comments: Comment[];
+    product_tags: ProductTag[];
     created_at: Date;
     description: Description;
     constructor(product: Partial<Product>);

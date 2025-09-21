@@ -21,12 +21,16 @@ const auth_guard_1 = require("../auth/guards/auth.guard");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const role_enum_1 = require("../auth/decorators/role.enum");
 const roles_guard_1 = require("../auth/guards/roles.guard");
+const create_user_like_product_dto_1 = require("../user-like-product/dto/create-user-like-product.dto");
 let ProductsController = class ProductsController {
     constructor(productService) {
         this.productService = productService;
     }
     findAll(page, category_id, brand_id) {
         return this.productService.findAll(page, category_id, brand_id);
+    }
+    findAllOfTag(page, tag_id) {
+        return this.productService.findAllOfTag(page, tag_id);
     }
     search(q) {
         return this.productService.search(q);
@@ -38,12 +42,39 @@ let ProductsController = class ProductsController {
         const newProduct = await this.productService.create(product);
         return newProduct;
     }
+    async addTag(productTags) {
+        return await this.productService.addTag(productTags);
+    }
+    async removeTag(product_id, tag_id) {
+        return await this.productService.removeTag({
+            tag_id,
+            product_id,
+        });
+    }
     async update(updateDto, id) {
         const newProduct = await this.productService.update(updateDto, id);
         return newProduct;
     }
     async delete(id) {
         await this.productService.delete(id);
+    }
+    async getLikeProduct(request, user_id) {
+        if (request.user.id !== user_id)
+            throw new common_1.BadRequestException();
+        return await this.productService.getLikeProduct(user_id);
+    }
+    async likeProduct(request, data) {
+        if (request.user.id !== data.user_id)
+            throw new common_1.BadRequestException();
+        await this.productService.likeProduct(data);
+    }
+    async unLikeProduct(request, product_id, user_id) {
+        if (request.user.id !== user_id)
+            throw new common_1.BadRequestException();
+        return await this.productService.unlikeProduct({
+            user_id,
+            product_id,
+        });
     }
 };
 exports.ProductsController = ProductsController;
@@ -53,9 +84,17 @@ __decorate([
     __param(1, (0, common_1.Query)('category_id')),
     __param(2, (0, common_1.Query)('brand_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, String]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('/tags/:tag_id'),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Param)('tag_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], ProductsController.prototype, "findAllOfTag", null);
 __decorate([
     (0, common_1.Get)('search'),
     __param(0, (0, common_1.Query)('q')),
@@ -81,6 +120,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "create", null);
 __decorate([
+    (0, common_1.Post)('/tags'),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "addTag", null);
+__decorate([
+    (0, common_1.Delete)(':product_id/tags/:tag_id'),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    __param(0, (0, common_1.Param)('product_id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Param)('tag_id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "removeTag", null);
+__decorate([
     (0, common_1.Put)(':id'),
     (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
@@ -99,6 +158,35 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Get)('/likes/:user_id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('user_id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "getLikeProduct", null);
+__decorate([
+    (0, common_1.Post)('/likes'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_user_like_product_dto_1.CreateUserLikeProductDto]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "likeProduct", null);
+__decorate([
+    (0, common_1.Delete)(':product_id/likes/:user_id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('product_id', common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Param)('user_id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, Number]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "unLikeProduct", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])

@@ -13,6 +13,7 @@ exports.Category = void 0;
 const typeorm_1 = require("typeorm");
 const brand_entity_1 = require("../../brand/entities/brand.entity");
 const category_attribute_entity_1 = require("../../category-attribute/entities/category-attribute.entity");
+const tag_entity_1 = require("../../tag/entities/tag.entity");
 let Category = class Category {
     constructor(item) {
         Object.assign(this, item);
@@ -42,6 +43,10 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Category.prototype, "brands", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => tag_entity_1.Tag, (t) => t.category),
+    __metadata("design:type", Array)
+], Category.prototype, "tags", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
