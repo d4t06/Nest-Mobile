@@ -13,6 +13,7 @@ import { Description } from '@/description/entities/description.entity';
 import { ProductAttribute } from '@/product-attribute/entities/product-attribute.entity';
 import { Brand } from '@/brand/entities/brand.entity';
 import { Comment } from '@/comment/entities/comment.entity';
+import { ProductTag } from '@/product-tag/entities/product-tag.entity';
 
 @Entity({ name: 'Products' })
 export class Product {
@@ -67,6 +68,10 @@ export class Product {
   // ***
   @OneToMany(() => Comment, (c) => c.product)
   comments: Comment[];
+
+  // ***
+  @OneToMany(() => ProductTag, (p) => p.product)
+  product_tags: ProductTag[];
 
   @CreateDateColumn()
   created_at: Date;

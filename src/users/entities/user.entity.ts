@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserLikeProduct } from '@/user-like-product/entities/user-like-product.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Users' })
 export class User {
@@ -20,6 +21,12 @@ export class User {
     default: 'USER',
   })
   role: string;
+
+  @OneToMany(() => UserLikeProduct, (model) => model.user, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  like_products: UserLikeProduct[];
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);

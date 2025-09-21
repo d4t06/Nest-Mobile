@@ -29,6 +29,7 @@ export class AuthService {
       {
         username: username,
         role: foundedUser.role,
+        id: foundedUser.id,
       },
       { expiresIn: TOKEN_EXPIRES, secret: process.env.JWT_SECRET },
     );
@@ -37,6 +38,7 @@ export class AuthService {
       {
         username: username,
         role: foundedUser.role,
+        id: foundedUser.id,
       },
       { expiresIn: REFRESH_TOKEN_EXPIRES, secret: process.env.JWT_SECRET },
     );
@@ -56,6 +58,8 @@ export class AuthService {
       user: {
         username: username,
         role: foundedUser.role,
+        like_products: foundedUser.like_products,
+        id: foundedUser.id,
       },
     };
   }
@@ -68,13 +72,13 @@ export class AuthService {
     const payload = await this.jwtService.verifyAsync(refreshToken, {
       secret: process.env.JWT_SECRET,
     });
-    const { username, role } = payload;
+    const { username, role, id } = payload;
 
     const foundedUser = await this.userService.findOne(username);
     if (!foundedUser) throw new UnauthorizedException();
 
     const newToken = await this.jwtService.signAsync(
-      { username, role },
+      { username, role, id },
       {
         secret: process.env.JWT_SECRET,
         expiresIn: TOKEN_EXPIRES,

@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Brand } from '@/brand/entities/brand.entity';
 import { CategoryAttribute } from '@/category-attribute/entities/category-attribute.entity';
+import { Tag } from '@/tag/entities/tag.entity';
 
 @Entity({ name: 'Categories' })
 export class Category {
@@ -29,15 +30,8 @@ export class Category {
   })
   brands: Brand[];
 
-  // @OneToMany(
-  //   () => Product,
-  //   // must reference column name in other table
-  //   (product) => product.category,
-  //   // not
-  //   // (categoryAttribute) => categoryAttribute.category_id,
-  //   { onDelete: 'CASCADE', onUpdate: 'CASCADE' },
-  // )
-  // products: Product[];
+  @OneToMany(() => Tag, (t) => t.category)
+  tags: Tag[];
 
   @Column({ nullable: true })
   attribute_order: string;

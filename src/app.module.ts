@@ -18,6 +18,9 @@ import { ProductAttributeModule } from './product-attribute/product-attribute.mo
 import { CategoryAttributeModule } from './category-attribute/category-attribute.module';
 import { CommentModule } from './comment/comment.module';
 import { ImageModule } from './image/image.module';
+import { UserLikeProductModule } from './user-like-product/user-like-product.module';
+import { TagModule } from './tag/tag.module';
+import { ProductTagModule } from './product-tag/product-tag.module';
 
 @Module({
   controllers: [AppController, InitController, GreetingController],
@@ -45,6 +48,9 @@ import { ImageModule } from './image/image.module';
     CategoryAttributeModule,
     CommentModule,
     ImageModule,
+    UserLikeProductModule,
+    TagModule,
+    ProductTagModule,
   ],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

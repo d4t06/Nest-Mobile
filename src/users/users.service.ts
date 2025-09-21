@@ -13,10 +13,10 @@ export class UsersService {
   ) {}
 
   async findOne(username: string) {
-    return await this.entityManager
-      .createQueryBuilder(User, 'user')
-      .where('user.username = :username', { username })
-      .getOne();
+    return await this.userRepository.findOne({
+      where: { username },
+      relations: { like_products: true },
+    });
   }
 
   async addOne(user: CreateUserDto) {
@@ -27,7 +27,6 @@ export class UsersService {
     });
 
     // console.log(foundedUser);
-  
 
     if (foundedUser) throw new ConflictException('Username had taken');
 

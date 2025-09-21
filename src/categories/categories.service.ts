@@ -18,6 +18,7 @@ export class CategoriesService {
       relations: {
         brands: true,
         attributes: true,
+        tags: true,
       },
     });
 
