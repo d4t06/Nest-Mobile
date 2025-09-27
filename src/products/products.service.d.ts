@@ -7,23 +7,28 @@ import { ProductTag } from '@/product-tag/entities/product-tag.entity';
 import { CreateProductTagDto } from '@/product-tag/dto/create-product-tag.dto';
 import { CreateUserLikeProductDto } from '@/user-like-product/dto/create-user-like-product.dto';
 import { UserLikeProduct } from '@/user-like-product/entities/user-like-product.entity';
+import { CreateProductFeatureDto } from '@/product-feature/dto/create-product-feature.dto';
+import { ProductFeature } from '@/product-feature/entities/product-feature.entity';
+import { UpdateProductFeature } from '@/product-feature/dto/update-product-feature.dto';
 export declare class ProductsService {
     private readonly productRepository;
     private readonly descriptionRepository;
     private readonly productTagRepository;
     private readonly userLikeProductRepository;
+    private readonly productFeatureReposity;
     private readonly entityManager;
-    constructor(productRepository: Repository<Product>, descriptionRepository: Repository<Description>, productTagRepository: Repository<ProductTag>, userLikeProductRepository: Repository<UserLikeProduct>, entityManager: EntityManager);
+    constructor(productRepository: Repository<Product>, descriptionRepository: Repository<Description>, productTagRepository: Repository<ProductTag>, userLikeProductRepository: Repository<UserLikeProduct>, productFeatureReposity: Repository<ProductFeature>, entityManager: EntityManager);
     pageSize: number;
-    findAll(page: string, category_id: string, brand_id: string): Promise<{
+    findAll(page: number, category_id: number, brand_id: string[], tag_id: string[]): Promise<{
         count: number;
         page: number;
         category_id: number;
-        brand_id: number;
+        brand_id: string[];
+        tag_id: string[];
         page_size: number;
         products: Product[];
     }>;
-    findAllOfTag(page: string, tag_id: string): Promise<{
+    findAllOfTag(page: number, tag_id: number): Promise<{
         count: number;
         page: number;
         page_size: number;
@@ -39,4 +44,8 @@ export declare class ProductsService {
     unlikeProduct(data: CreateUserLikeProductDto): Promise<string>;
     delete(id: number): Promise<string>;
     getLikeProduct(user_id: number): Promise<UserLikeProduct[]>;
+    addFeature(data: CreateProductFeatureDto): Promise<CreateProductFeatureDto & ProductFeature>;
+    editFeature(data: UpdateProductFeature, id: number): Promise<string>;
+    removeFeature(id: number): Promise<string>;
+    test(): Promise<string>;
 }

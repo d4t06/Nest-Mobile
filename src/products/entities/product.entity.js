@@ -17,6 +17,7 @@ const product_attribute_entity_1 = require("../../product-attribute/entities/pro
 const brand_entity_1 = require("../../brand/entities/brand.entity");
 const comment_entity_1 = require("../../comment/entities/comment.entity");
 const product_tag_entity_1 = require("../../product-tag/entities/product-tag.entity");
+const product_feature_entity_1 = require("../../product-feature/entities/product-feature.entity");
 let Product = class Product {
     constructor(product) {
         Object.assign(this, product);
@@ -73,6 +74,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => product_tag_entity_1.ProductTag, (p) => p.product),
     __metadata("design:type", Array)
 ], Product.prototype, "product_tags", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => product_feature_entity_1.ProductFeature, (p) => p.product),
+    __metadata("design:type", Array)
+], Product.prototype, "features", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

@@ -30,6 +30,7 @@ const image_module_1 = require("./image/image.module");
 const user_like_product_module_1 = require("./user-like-product/user-like-product.module");
 const tag_module_1 = require("./tag/tag.module");
 const product_tag_module_1 = require("./product-tag/product-tag.module");
+const product_feature_module_1 = require("./product-feature/product-feature.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -62,6 +63,7 @@ exports.AppModule = AppModule = __decorate([
             user_like_product_module_1.UserLikeProductModule,
             tag_module_1.TagModule,
             product_tag_module_1.ProductTagModule,
+            product_feature_module_1.ProductFeatureModule,
         ],
         providers: [app_service_1.AppService, { provide: core_1.APP_GUARD, useClass: throttler_1.ThrottlerGuard }],
     })

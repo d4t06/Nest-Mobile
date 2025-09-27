@@ -4,18 +4,22 @@ import { UpdateProductDto } from './dto/update.product.dto';
 import { Product } from './entities/product.entity';
 import { CreateProductTagDto } from '@/product-tag/dto/create-product-tag.dto';
 import { CreateUserLikeProductDto } from '@/user-like-product/dto/create-user-like-product.dto';
+import { CreateProductFeatureDto } from '@/product-feature/dto/create-product-feature.dto';
+import { UpdateProductFeature } from '@/product-feature/dto/update-product-feature.dto';
 export declare class ProductsController {
     private readonly productService;
     constructor(productService: ProductsService);
-    findAll(page: string, category_id: string, brand_id: string): Promise<{
+    test(): Promise<void>;
+    findAll(page: number, category_id: number, brand_id: string[], tag_id: string[]): Promise<{
         count: number;
         page: number;
         category_id: number;
-        brand_id: number;
+        brand_id: string[];
+        tag_id: string[];
         page_size: number;
         products: Product[];
     }>;
-    findAllOfTag(page: string, tag_id: string): Promise<{
+    findAllOfTag(page: number, tag_id: number): Promise<{
         count: number;
         page: number;
         page_size: number;
@@ -43,4 +47,7 @@ export declare class ProductsController {
             id: number;
         };
     }, product_id: number, user_id: number): Promise<string>;
+    addProductFeature(data: CreateProductFeatureDto): Promise<void>;
+    editProductFeature(data: UpdateProductFeature, id: number): Promise<void>;
+    deleteProductFeature(id: number): Promise<void>;
 }

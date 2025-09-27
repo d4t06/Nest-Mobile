@@ -22,12 +22,17 @@ const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const role_enum_1 = require("../auth/decorators/role.enum");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const create_user_like_product_dto_1 = require("../user-like-product/dto/create-user-like-product.dto");
+const create_product_feature_dto_1 = require("../product-feature/dto/create-product-feature.dto");
+const update_product_feature_dto_1 = require("../product-feature/dto/update-product-feature.dto");
 let ProductsController = class ProductsController {
     constructor(productService) {
         this.productService = productService;
     }
-    findAll(page, category_id, brand_id) {
-        return this.productService.findAll(page, category_id, brand_id);
+    async test() {
+        await this.productService.test();
+    }
+    findAll(page, category_id, brand_id, tag_id) {
+        return this.productService.findAll(page, category_id, brand_id, tag_id);
     }
     findAllOfTag(page, tag_id) {
         return this.productService.findAllOfTag(page, tag_id);
@@ -76,23 +81,39 @@ let ProductsController = class ProductsController {
             product_id,
         });
     }
+    async addProductFeature(data) {
+        await this.productService.addFeature(data);
+    }
+    async editProductFeature(data, id) {
+        await this.productService.editFeature(data, id);
+    }
+    async deleteProductFeature(id) {
+        await this.productService.removeFeature(id);
+    }
 };
 exports.ProductsController = ProductsController;
 __decorate([
-    (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('page')),
-    __param(1, (0, common_1.Query)('category_id')),
-    __param(2, (0, common_1.Query)('brand_id')),
+    (0, common_1.Get)('/test'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "test", null);
+__decorate([
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('category_id', new common_1.ParseIntPipe({ optional: true }))),
+    __param(2, (0, common_1.Query)('brand_id', new common_1.ParseArrayPipe({ optional: true }))),
+    __param(3, (0, common_1.Query)('tag_id', new common_1.ParseArrayPipe({ optional: true }))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Array, Array]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('/tags/:tag_id'),
-    __param(0, (0, common_1.Query)('page')),
-    __param(1, (0, common_1.Param)('tag_id')),
+    __param(0, (0, common_1.Query)('page', new common_1.ParseIntPipe({ optional: true }))),
+    __param(1, (0, common_1.Param)('tag_id', new common_1.ParseIntPipe({ optional: true }))),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAllOfTag", null);
 __decorate([
@@ -187,6 +208,37 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number, Number]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "unLikeProduct", null);
+__decorate([
+    (0, common_1.Post)('/features'),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_product_feature_dto_1.CreateProductFeatureDto]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "addProductFeature", null);
+__decorate([
+    (0, common_1.Put)('/features/:id'),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_product_feature_dto_1.UpdateProductFeature, Number]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "editProductFeature", null);
+__decorate([
+    (0, common_1.Delete)('/features/:id'),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "deleteProductFeature", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])
